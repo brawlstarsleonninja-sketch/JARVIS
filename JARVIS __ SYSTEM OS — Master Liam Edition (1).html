@@ -1,0 +1,2588 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#050508" />
+  <title>JARVIS // SYSTEM OS — Master Liam Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Orbitron"', 'sans-serif'],
+            body: ['"Rajdhani"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            void: '#050508',
+            panel: '#0a0b12',
+            panelLight: '#10121e',
+            cyanGlow: '#00f3ff',
+            purpleGlow: '#b026ff',
+            goldGlow: '#ffd700',
+            crimsonGlow: '#ff2a5f',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #050508;
+      color: #e2e8f0;
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 15% 15%, rgba(0, 243, 255, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(176, 38, 255, 0.07) 0%, transparent 45%),
+        linear-gradient(rgba(0, 243, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.025) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #050508; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00f3ff; }
+
+    /* Solo Leveling / HUD Glows */
+    .hud-card {
+      background: linear-gradient(145deg, rgba(12, 14, 24, 0.92), rgba(7, 8, 14, 0.96));
+      border: 1px solid rgba(0, 243, 255, 0.22);
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.05), inset 0 0 15px rgba(0, 243, 255, 0.03);
+      backdrop-filter: blur(10px);
+    }
+    .hud-card-purple {
+      background: linear-gradient(145deg, rgba(16, 11, 28, 0.92), rgba(8, 6, 15, 0.96));
+      border: 1px solid rgba(176, 38, 255, 0.3);
+      box-shadow: 0 0 22px rgba(176, 38, 255, 0.08), inset 0 0 15px rgba(176, 38, 255, 0.04);
+    }
+    .hud-card-gold {
+      background: linear-gradient(145deg, rgba(22, 18, 10, 0.92), rgba(10, 8, 5, 0.96));
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      box-shadow: 0 0 22px rgba(255, 215, 0, 0.08);
+    }
+    .glow-text-cyan { text-shadow: 0 0 10px rgba(0, 243, 255, 0.65); }
+    .glow-text-purple { text-shadow: 0 0 12px rgba(176, 38, 255, 0.75); }
+    .glow-text-gold { text-shadow: 0 0 12px rgba(255, 215, 0, 0.7); }
+
+    /* Pet Animations */
+    @keyframes petFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      25% { transform: translateY(-7px) rotate(-3deg) scale(1.03); }
+      50% { transform: translateY(-2px) rotate(2deg) scale(1); }
+      75% { transform: translateY(-9px) rotate(3deg) scale(1.04); }
+    }
+    @keyframes petExcited {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      20% { transform: scale(1.25) rotate(-12deg) translateY(-10px); }
+      40% { transform: scale(1.2) rotate(12deg) translateY(-14px); }
+      60% { transform: scale(1.25) rotate(-8deg) translateY(-8px); }
+      80% { transform: scale(1.1) rotate(6deg); }
+    }
+    @keyframes eggWobble {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(-10deg); }
+      40% { transform: rotate(10deg); }
+      60% { transform: rotate(-6deg); }
+      80% { transform: rotate(6deg); }
+    }
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+    .pet-idle { animation: petFloat 3.4s ease-in-out infinite; }
+    .pet-excited { animation: petExcited 0.75s ease-in-out; }
+    .egg-wobble { animation: eggWobble 1.6s ease-in-out infinite; }
+
+    /* Tab transitions */
+    .tab-panel { display: none; animation: fadeIn 0.25s ease-out; }
+    .tab-panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tactile Buttons */
+    .btn-cyber {
+      transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-cyber:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24 selection:bg-cyan-500 selection:text-black">
+
+  <!-- TOP STATUS HUD HEADER -->
+  <header class="sticky top-0 z-40 bg-[#050508]/95 backdrop-blur-md border-b border-cyan-500/25 px-3 sm:px-6 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <!-- Left: System Identity & Live Clock -->
+      <div class="flex items-center gap-3">
+        <div class="relative w-10 h-10 rounded-xl bg-cyan-950/60 border border-cyan-400/50 flex items-center justify-center shadow-[0_0_15px_rgba(0,243,255,0.25)]">
+          <div class="w-4 h-4 rounded-full bg-cyan-400 animate-ping absolute opacity-40"></div>
+          <div class="w-4 h-4 rounded-full bg-cyan-300 shadow-[0_0_10px_#00f3ff]"></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-sm sm:text-base tracking-wider text-white">JARVIS <span class="text-cyan-400">//</span> OS</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">PLAYER: LIAM</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+            <span id="hud-date">---</span>
+            <span class="text-cyan-500">•</span>
+            <span id="hud-time" class="text-cyan-300 font-bold">00:00:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Rank, Credits & Equipped Animated Pet -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Live Animated Equipped Pet Widget -->
+        <button onclick="petInteract()" title="Tap your companion!" class="group relative flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-950/70 to-cyan-950/70 border border-purple-400/40 hover:border-cyan-400 transition">
+          <div id="hud-pet-avatar" class="text-2xl sm:text-3xl pet-idle select-none">🤖</div>
+          <div class="text-left hidden xs:block">
+            <div id="hud-pet-name" class="text-[11px] font-display font-bold text-cyan-300 leading-tight">MINI ARC DRONE</div>
+            <div id="hud-pet-speech" class="text-[10px] text-slate-300 truncate max-w-[115px] sm:max-w-[160px]">"Ready to conquer, Master Liam."</div>
+          </div>
+        </button>
+
+        <!-- Credits Counter -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-950/40 border border-amber-400/50 shadow-[0_0_15px_rgba(255,215,0,0.15)]">
+          <span class="text-lg">🪙</span>
+          <div>
+            <div class="text-[9px] font-mono uppercase tracking-widest text-amber-300/80">CREDITS</div>
+            <div id="hud-credits" class="font-display font-black text-sm sm:text-base text-amber-300 glow-text-gold">150</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 pt-4 space-y-5">
+
+    <!-- ========================================================= -->
+    <!-- TAB 1: COMMAND CENTER (MAIN HUD)                          -->
+    <!-- ========================================================= -->
+    <section id="tab-home" class="tab-panel active space-y-5">
+
+      <!-- Quick Action Power Bar: Energy Ignition, Motivation, Pray -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <button onclick="triggerEnergyBoost()" class="btn-cyber hud-card rounded-2xl p-4 flex items-center justify-between text-left hover:border-cyan-400 group">
+          <div>
+            <div class="text-[11px] font-mono text-cyan-400 tracking-widest uppercase">INSTANT MOMENTUM</div>
+            <div class="font-display font-bold text-base sm:text-lg text-white group-hover:text-cyan-300">⚡ ENERGY IGNITION</div>
+            <div class="text-xs text-slate-400">Pop-up micro-workout + Credits</div>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center text-2xl group-hover:scale-110 transition">⚡</div>
+        </button>
+
+        <button onclick="triggerMotivation()" class="btn-cyber hud-card-purple rounded-2xl p-4 flex items-center justify-between text-left hover:border-purple-400 group">
+          <div>
+            <div class="text-[11px] font-mono text-purple-400 tracking-widest uppercase">UNLIMITED OVERRIDE</div>
+            <div class="font-display font-bold text-base sm:text-lg text-white group-hover:text-purple-300">🔥 SYSTEM MOTIVATION</div>
+            <div class="text-xs text-slate-400">Refuse to quit. Arise stronger.</div>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-400/40 flex items-center justify-center text-2xl group-hover:scale-110 transition">🔥</div>
+        </button>
+
+        <button onclick="openPrayModal()" class="btn-cyber hud-card-gold rounded-2xl p-4 flex items-center justify-between text-left hover:border-amber-300 group">
+          <div>
+            <div class="text-[11px] font-mono text-amber-300 tracking-widest uppercase">DAILY SANCTUARY</div>
+            <div class="font-display font-bold text-base sm:text-lg text-white group-hover:text-amber-200">🙏 DAILY PRAYER</div>
+            <div class="text-xs text-slate-400">Peace, strength & gratitude</div>
+          </div>
+          <div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-center text-2xl group-hover:scale-110 transition">✨</div>
+        </button>
+      </div>
+
+      <!-- Companion Showcase & Active Egg Incubator Strip -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- Interactive Companion Stage -->
+        <div class="hud-card-purple rounded-2xl p-4 flex items-center gap-4 relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 text-8xl opacity-10 pointer-events-none select-none" id="stage-pet-bg">🤖</div>
+          <div onclick="petInteract()" class="cursor-pointer w-20 h-20 rounded-2xl bg-black/60 border border-purple-400/50 flex items-center justify-center text-5xl pet-idle shadow-[0_0_25px_rgba(176,38,255,0.25)] shrink-0">
+            <span id="stage-pet-emoji">🤖</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span id="stage-pet-rarity" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">COMMON</span>
+              <span class="text-[11px] font-mono text-slate-400">ACTIVE GUARDIAN</span>
+            </div>
+            <h3 id="stage-pet-name" class="font-display font-bold text-lg text-white mt-0.5 truncate">Mini Arc Drone</h3>
+            <p id="stage-pet-quote" class="text-xs sm:text-sm text-purple-200 italic mt-1">"Master Liam, every task completed levels up your real-life stats!"</p>
+          </div>
+        </div>
+
+        <!-- Active Egg Incubator -->
+        <div class="hud-card rounded-2xl p-4 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div id="incubator-emoji" class="w-16 h-16 rounded-2xl bg-cyan-950/50 border border-cyan-400/40 flex items-center justify-center text-4xl egg-wobble shrink-0">🥚</div>
+            <div>
+              <div class="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">INCUBATION CHAMBER</div>
+              <div id="incubator-name" class="font-display font-bold text-base text-white">No Egg Incubating</div>
+              <div id="incubator-progress-text" class="text-xs text-slate-400 mt-0.5">Visit the Pet Shop to buy an egg!</div>
+              <div class="w-40 sm:w-48 h-2 bg-slate-900 rounded-full overflow-hidden mt-2 border border-slate-700">
+                <div id="incubator-bar" class="h-full bg-gradient-to-r from-cyan-400 to-purple-500 transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          <button onclick="switchTab('shop')" class="btn-cyber px-3 py-2 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 font-display text-xs font-bold hover:bg-cyan-500/30 shrink-0">
+            SHOP
+          </button>
+        </div>
+
+        <!-- Pinned YouTube Creator Mission (From Lozziniho) -->
+        <div class="hud-card rounded-2xl p-4 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-rose-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> YOUTUBE CREATOR REMINDER
+            </span>
+            <button onclick="switchTab('ai')" class="text-[11px] font-mono text-cyan-400 hover:underline">Lozziniho AI →</button>
+          </div>
+          <div id="pinned-yt-title" class="font-display font-bold text-sm sm:text-base text-white my-1.5 line-clamp-2">
+            No video pinned yet. Ask Lozziniho for 10 viral ideas!
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Complete video for +50 Credits & Loot!</span>
+            <button id="complete-yt-btn" onclick="completePinnedYoutube()" class="hidden btn-cyber px-3 py-1 rounded-lg bg-rose-500/20 border border-rose-400/50 text-rose-300 font-mono text-xs font-bold hover:bg-rose-500/30">
+              ✓ FILMED
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid: Today's Habits/Tasks + Daily 3 Quests -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left (7 cols): Today's Scheduled Tasks & Upcoming Special Events -->
+        <div class="lg:col-span-7 space-y-5">
+          <!-- Today's Habits Checklist -->
+          <div class="hud-card rounded-2xl p-4 sm:p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-cyan-500/20">
+              <div>
+                <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">TACTICAL CHECKLIST</div>
+                <h2 class="font-display font-bold text-lg sm:text-xl text-white">📋 TODAY'S SCHEDULED HABITS (<span id="today-day-name" class="text-cyan-300">---</span>)</h2>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="today-progress-badge" class="text-xs font-mono px-2.5 py-1 rounded-lg bg-cyan-950 text-cyan-300 border border-cyan-500/30">0 / 0 Done</span>
+                <button onclick="switchTab('calendar')" class="btn-cyber px-3 py-1.5 rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold">+ EDIT</button>
+              </div>
+            </div>
+
+            <div id="today-habits-list" class="mt-3 space-y-2.5">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Upcoming Special Events Preview -->
+          <div class="hud-card-purple rounded-2xl p-4 sm:p-5">
+            <div class="flex items-center justify-between pb-3 border-b border-purple-500/20">
+              <div>
+                <div class="text-[11px] font-mono text-purple-400 uppercase tracking-widest">TOURNAMENTS & EXAMS</div>
+                <h2 class="font-display font-bold text-lg text-white">🏆 UPCOMING SPECIAL EVENTS</h2>
+              </div>
+              <button onclick="switchTab('calendar')" class="btn-cyber px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-400/40 text-purple-300 text-xs font-bold">CALENDAR →</button>
+            </div>
+            <div id="home-special-events" class="mt-3 space-y-2">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right (5 cols): Daily 3 Quests + Daily Music + Daily Fact -->
+        <div class="lg:col-span-5 space-y-5">
+          
+          <!-- Daily 3 Quests (Resets Daily) -->
+          <div class="hud-card-gold rounded-2xl p-4 sm:p-5">
+            <div class="flex items-center justify-between pb-3 border-b border-amber-500/25">
+              <div>
+                <div class="text-[11px] font-mono text-amber-400 uppercase tracking-widest">SYSTEM DAILY QUESTS</div>
+                <h2 class="font-display font-bold text-lg text-white">⚔️ DAILY 3 QUESTS</h2>
+              </div>
+              <button onclick="rerollDailyQuests()" title="Generate 3 fresh quests" class="btn-cyber text-xs font-mono px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-400/40 text-amber-300 hover:bg-amber-500/25">
+                ↻ REROLL
+              </button>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Resets automatically at midnight. Every quest grants Credits + a Random Reward Box!</p>
+            <div id="daily-quests-list" class="mt-3 space-y-2.5">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Daily English Song Box -->
+          <div class="hud-card rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">🎧 DAILY SOUNDTRACK (RESETS DAILY)</span>
+              <span class="text-xs font-mono text-slate-500">ENGLISH TRACK</span>
+            </div>
+            <div class="mt-2.5 flex items-start gap-3">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/30 to-purple-600/30 border border-cyan-400/40 flex items-center justify-center text-2xl shrink-0">🎵</div>
+              <div>
+                <h3 id="daily-song-title" class="font-display font-bold text-base text-white">Loading Track...</h3>
+                <div id="daily-song-artist" class="text-xs font-mono text-cyan-300">Artist</div>
+                <p id="daily-song-vibe" class="text-xs text-slate-300 mt-1">Vibe description</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily Knowledge / Entertainment Fact Box -->
+          <div class="hud-card-purple rounded-2xl p-4 sm:p-5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-mono text-purple-400 uppercase tracking-widest">🧠 DAILY INTEL & TRIVIA</span>
+              <span id="daily-fact-category" class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">INTEL</span>
+            </div>
+            <p id="daily-fact-text" class="text-sm text-slate-200 mt-2.5 leading-relaxed">
+              Loading today's intel...
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Reward Loot Pool Manager (Quick Access) -->
+      <div class="hud-card rounded-2xl p-4 sm:p-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-cyan-500/20">
+          <div>
+            <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">DOPAMINE LOOT TABLE</div>
+            <h2 class="font-display font-bold text-lg text-white">🎁 CUSTOMIZABLE TASK REWARD POOL</h2>
+          </div>
+          <span class="text-xs text-slate-400">1 random reward unlocks every time you check off a task or quest!</span>
+        </div>
+        <form onsubmit="addCustomReward(event)" class="mt-3 flex gap-2">
+          <input id="new-reward-input" type="text" required placeholder="Add custom reward (e.g., 15 mins TikTok, 1 episode anime, Iced Milo)..." class="flex-1 bg-black/60 border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+          <button type="submit" class="btn-cyber px-4 py-2.5 rounded-xl bg-cyan-500 text-black font-display font-bold text-xs sm:text-sm hover:bg-cyan-400">
+            + ADD REWARD
+          </button>
+        </form>
+        <div id="rewards-pool-tags" class="mt-3 flex flex-wrap gap-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: DUAL CALENDAR SYSTEM (HABITS + SPECIAL EVENTS)     -->
+    <!-- ========================================================= -->
+    <section id="tab-calendar" class="tab-panel space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        
+        <!-- CALENDAR 1: WEEKLY HABITS & ROUTINE GAME BOARD -->
+        <div class="hud-card rounded-2xl p-4 sm:p-5 space-y-4">
+          <div class="border-b border-cyan-500/20 pb-3">
+            <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">RECURRING SYSTEM PROTOCOL</div>
+            <h2 class="font-display font-bold text-xl text-white">📅 WEEKLY HABITS CALENDAR</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Select any day of the week to inspect, tick off, or schedule recurring habits.</p>
+          </div>
+
+          <!-- Day Selector Pills -->
+          <div id="habit-day-selector" class="grid grid-cols-7 gap-1.5">
+            <!-- Sun - Sat buttons injected by JS -->
+          </div>
+
+          <!-- Selected Day Task View -->
+          <div class="bg-black/40 rounded-xl p-3.5 border border-cyan-500/20">
+            <div class="flex items-center justify-between mb-2.5">
+              <span id="selected-habit-day-label" class="font-display font-bold text-sm text-cyan-300">MONDAY PROTOCOL</span>
+              <span class="text-[11px] font-mono text-slate-400">Tap to complete</span>
+            </div>
+            <div id="selected-day-habits-list" class="space-y-2">
+              <!-- Habits for selected day -->
+            </div>
+          </div>
+
+          <!-- Add New Recurring Habit Form -->
+          <form onsubmit="addHabit(event)" class="space-y-3 pt-2 border-t border-slate-800">
+            <div class="text-xs font-display font-bold text-white uppercase tracking-wider">+ SCHEDULE NEW WEEKLY HABIT</div>
+            <input id="habit-title-input" type="text" required placeholder="Habit name (e.g., Football dribbling drills, Math revision)..." class="w-full bg-black/60 border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+            <div>
+              <div class="text-[11px] font-mono text-slate-400 mb-1.5">Repeat every week on:</div>
+              <div id="habit-days-checkboxes" class="grid grid-cols-7 gap-1.5">
+                <!-- Day toggles injected by JS -->
+              </div>
+            </div>
+            <button type="submit" class="w-full btn-cyber py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-display font-bold text-sm hover:opacity-95">
+              SAVE HABIT TO SCHEDULE
+            </button>
+          </form>
+        </div>
+
+        <!-- CALENDAR 2: SPECIAL EVENTS (FOOTBALL, EXAMS, MILESTONES) -->
+        <div class="hud-card-purple rounded-2xl p-4 sm:p-5 space-y-4">
+          <div class="border-b border-purple-500/25 pb-3">
+            <div class="text-[11px] font-mono text-purple-400 uppercase tracking-widest">HIGH-STAKES MISSIONS</div>
+            <h2 class="font-display font-bold text-xl text-white">🏆 SPECIAL EVENTS CALENDAR</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Track football competitions, exams, tournaments, and big life dates.</p>
+          </div>
+
+          <!-- Add Special Event Form -->
+          <form onsubmit="addSpecialEvent(event)" class="space-y-2.5 bg-black/40 p-3.5 rounded-xl border border-purple-500/25">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="event-title-input" type="text" required placeholder="Event (e.g., Football Finals, Science Exam)" class="bg-black/70 border border-purple-500/30 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-400" />
+              <input id="event-date-input" type="date" required class="bg-black/70 border border-purple-500/30 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-400" />
+            </div>
+            <div class="flex gap-2">
+              <select id="event-category-input" class="bg-black/70 border border-purple-500/30 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-400">
+                <option value="⚽ Football Match">⚽ Football Competition</option>
+                <option value="📚 Exam / Test">📚 Exam / Academic</option>
+                <option value="🎮 Tournament">🎮 Gaming Tournament</option>
+                <option value="🎬 YouTube Milestone">🎬 YouTube Special</option>
+                <option value="⭐ Special Event">⭐ Other Special Event</option>
+              </select>
+              <button type="submit" class="flex-1 btn-cyber py-2 px-4 rounded-xl bg-purple-600 text-white font-display font-bold text-xs sm:text-sm hover:bg-purple-500">
+                + ADD EVENT
+              </button>
+            </div>
+          </form>
+
+          <!-- Special Events List -->
+          <div id="special-events-list" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 3: EGG SHOP & PET SANCTUARY (10 EGGS + RARITIES)      -->
+    <!-- ========================================================= -->
+    <section id="tab-shop" class="tab-panel space-y-5">
+      
+      <!-- Top Banner: Active Incubator & Energy Activity Customizer -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="hud-card-gold rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div id="shop-incubator-icon" class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-4xl egg-wobble">🥚</div>
+            <div>
+              <div class="text-[11px] font-mono text-amber-300 uppercase tracking-widest">INCUBATOR STATUS</div>
+              <h3 id="shop-incubator-title" class="font-display font-bold text-lg text-white">Empty Chamber</h3>
+              <p id="shop-incubator-desc" class="text-xs text-slate-300">Purchase any of the 10 Eggs below. Completing tasks hatches them!</p>
+            </div>
+          </div>
+          <button id="instant-hatch-btn" onclick="instantHatchDebug()" class="hidden btn-cyber px-3 py-2 rounded-xl bg-amber-500 text-black font-display font-bold text-xs">
+            ⚡ HATCH NOW (50🪙)
+          </button>
+        </div>
+
+        <!-- Custom Energy Activity Manager -->
+        <div class="hud-card rounded-2xl p-4 sm:p-5">
+          <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">CUSTOMIZE ENERGY IGNITION</div>
+          <h3 class="font-display font-bold text-base text-white">⚡ ADD YOUR OWN PRE-TASK BOOSTERS</h3>
+          <form onsubmit="addCustomEnergy(event)" class="mt-2 flex gap-2">
+            <input id="new-energy-input" type="text" required placeholder="e.g., 30 Jumping Jacks, 15 Burpees, Cold Water Splash..." class="flex-1 bg-black/60 border border-cyan-500/30 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+            <button type="submit" class="btn-cyber px-4 py-2 rounded-xl bg-cyan-500 text-black font-display font-bold text-xs">ADD</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Unlocked Pets Collection (Equip Companion) -->
+      <div class="hud-card-purple rounded-2xl p-4 sm:p-5">
+        <div class="flex items-center justify-between pb-3 border-b border-purple-500/20">
+          <div>
+            <div class="text-[11px] font-mono text-purple-400 uppercase tracking-widest">SHADOW & CYBER ARMY</div>
+            <h2 class="font-display font-bold text-lg text-white">🐾 MY UNLOCKED PETS (<span id="unlocked-pets-count">1</span>/10)</h2>
+          </div>
+          <span class="text-xs text-slate-400">Equip any pet to animate on your Main HUD!</span>
+        </div>
+        <div id="unlocked-pets-grid" class="mt-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- 10 Eggs Marketplace -->
+      <div class="hud-card rounded-2xl p-4 sm:p-5">
+        <div class="pb-3 border-b border-cyan-500/20">
+          <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">MYSTERY EGG HATCHERY</div>
+          <h2 class="font-display font-bold text-xl text-white">🥚 10 MYSTERY EGGS SHOP</h2>
+          <p class="text-xs text-slate-400">Higher tier eggs require more tasks to hatch and summon Mythic & Sovereign beasts!</p>
+        </div>
+        <div id="eggs-shop-grid" class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          <!-- 10 Eggs injected by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 4: ARCADE ARENA (STREET FIGHTER + SNAKE + PONG + TTT) -->
+    <!-- ========================================================= -->
+    <section id="tab-arcade" class="tab-panel space-y-4">
+      <div class="hud-card rounded-2xl p-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">COMBAT & REFLEX TRAINING</div>
+            <h2 class="font-display font-bold text-xl text-white">🕹️ ARCADE ARENA — WIN FOR CREDITS</h2>
+          </div>
+          <!-- Game Switcher Buttons -->
+          <div class="flex flex-wrap gap-2">
+            <button onclick="selectArcadeGame('sf')" id="btn-game-sf" class="btn-cyber px-3.5 py-2 rounded-xl font-display font-bold text-xs bg-rose-600 text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]">
+              🥊 STREET FIGHTER
+            </button>
+            <button onclick="selectArcadeGame('snake')" id="btn-game-snake" class="btn-cyber px-3.5 py-2 rounded-xl font-display font-bold text-xs bg-slate-800 text-slate-300 border border-slate-700">
+              🐍 NEON SNAKE
+            </button>
+            <button onclick="selectArcadeGame('pong')" id="btn-game-pong" class="btn-cyber px-3.5 py-2 rounded-xl font-display font-bold text-xs bg-slate-800 text-slate-300 border border-slate-700">
+              🏓 CYBER PONG
+            </button>
+            <button onclick="selectArcadeGame('ttt')" id="btn-game-ttt" class="btn-cyber px-3.5 py-2 rounded-xl font-display font-bold text-xs bg-slate-800 text-slate-300 border border-slate-700">
+              ❌ TIC-TAC-TOE
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GAME 1: STREET FIGHTER (CYBER BRAWL) -->
+      <div id="arcade-sf" class="hud-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="font-display font-bold text-lg text-rose-400">🥊 STREET FIGHTER: SHADOW DUEL</h3>
+            <p class="text-xs text-slate-400">Defeat the System AI Bot to earn <span class="text-amber-300 font-bold">+35 Credits</span>! Use buttons below or keyboard (A/D move, J punch, K kick, L Hadouken, S block).</p>
+          </div>
+          <button onclick="startStreetFighter()" class="btn-cyber px-4 py-2 rounded-xl bg-rose-600 text-white font-display font-bold text-xs hover:bg-rose-500">
+            ↻ NEW FIGHT
+          </button>
+        </div>
+
+        <!-- Fight HUD Bars -->
+        <div class="grid grid-cols-11 items-center gap-2 bg-black/70 p-3 rounded-xl border border-rose-500/30">
+          <div class="col-span-5">
+            <div class="flex justify-between text-xs font-display font-bold text-cyan-300 mb-1">
+              <span>MASTER LIAM</span>
+              <span id="sf-p1-hp-text">100%</span>
+            </div>
+            <div class="h-3.5 bg-slate-900 rounded-full overflow-hidden border border-cyan-500/40">
+              <div id="sf-p1-hp" class="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-150" style="width: 100%"></div>
+            </div>
+          </div>
+          <div class="col-span-1 text-center font-display font-black text-amber-400 text-sm sm:text-base">VS</div>
+          <div class="col-span-5">
+            <div class="flex justify-between text-xs font-display font-bold text-rose-400 mb-1">
+              <span id="sf-ai-hp-text">100%</span>
+              <span>SHADOW BOT</span>
+            </div>
+            <div class="h-3.5 bg-slate-900 rounded-full overflow-hidden border border-rose-500/40">
+              <div id="sf-ai-hp" class="h-full bg-gradient-to-l from-rose-500 to-purple-600 transition-all duration-150 ml-auto" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Street Fighter Arena Canvas -->
+        <div class="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden border border-rose-500/40 bg-[#07070c]">
+          <canvas id="sf-canvas" class="w-full h-[260px] sm:h-[310px] block"></canvas>
+          <div id="sf-banner" class="hidden absolute inset-0 bg-black/75 flex flex-col items-center justify-center text-center p-4">
+            <div id="sf-banner-title" class="font-display font-black text-3xl sm:text-4xl text-amber-300 glow-text-gold">K.O.! YOU WIN!</div>
+            <div id="sf-banner-sub" class="text-sm text-cyan-300 mt-1">+35 Credits Awarded!</div>
+            <button onclick="startStreetFighter()" class="mt-4 btn-cyber px-6 py-2.5 rounded-xl bg-rose-600 text-white font-display font-bold text-sm">FIGHT AGAIN</button>
+          </div>
+        </div>
+
+        <!-- Tactile Touch Fight Controls (Outside Canvas) -->
+        <div class="max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-6 gap-2 pt-1">
+          <button onpointerdown="sfMove(-1)" class="btn-cyber py-3.5 rounded-xl bg-slate-800 border border-slate-600 text-white font-display font-bold text-xs sm:text-sm">◀ LEFT</button>
+          <button onpointerdown="sfMove(1)" class="btn-cyber py-3.5 rounded-xl bg-slate-800 border border-slate-600 text-white font-display font-bold text-xs sm:text-sm">RIGHT ▶</button>
+          <button onpointerdown="sfAction('punch')" class="btn-cyber py-3.5 rounded-xl bg-cyan-600/30 border border-cyan-400 text-cyan-200 font-display font-bold text-xs sm:text-sm">👊 PUNCH</button>
+          <button onpointerdown="sfAction('kick')" class="btn-cyber py-3.5 rounded-xl bg-purple-600/30 border border-purple-400 text-purple-200 font-display font-bold text-xs sm:text-sm">🦵 KICK</button>
+          <button onpointerdown="sfAction('hadouken')" class="btn-cyber py-3.5 rounded-xl bg-amber-500/30 border border-amber-400 text-amber-200 font-display font-bold text-xs sm:text-sm">🔥 HADOUKEN</button>
+          <button onpointerdown="sfAction('block')" class="btn-cyber py-3.5 rounded-xl bg-emerald-600/30 border border-emerald-400 text-emerald-200 font-display font-bold text-xs sm:text-sm">🛡️ BLOCK</button>
+        </div>
+      </div>
+
+      <!-- GAME 2: NEON SNAKE -->
+      <div id="arcade-snake" class="hidden hud-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-display font-bold text-lg text-emerald-400">🐍 NEON SNAKE</h3>
+            <p class="text-xs text-slate-400">Score 8+ points to earn <span class="text-amber-300 font-bold">+25 Credits</span>!</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-sm text-emerald-300">SCORE: <strong id="snake-score">0</strong></span>
+            <button onclick="startSnake()" class="btn-cyber px-4 py-2 rounded-xl bg-emerald-500 text-black font-display font-bold text-xs">START</button>
+          </div>
+        </div>
+        <div class="max-w-md mx-auto rounded-2xl overflow-hidden border border-emerald-500/40 bg-black">
+          <canvas id="snake-canvas" class="w-full aspect-square block"></canvas>
+        </div>
+        <!-- Touch D-Pad Outside Canvas -->
+        <div class="max-w-[220px] mx-auto grid grid-cols-3 gap-2">
+          <div></div>
+          <button onclick="setSnakeDir(0, -1)" class="btn-cyber py-3 rounded-xl bg-slate-800 border border-emerald-500/40 text-emerald-300 font-bold">▲</button>
+          <div></div>
+          <button onclick="setSnakeDir(-1, 0)" class="btn-cyber py-3 rounded-xl bg-slate-800 border border-emerald-500/40 text-emerald-300 font-bold">◀</button>
+          <button onclick="setSnakeDir(0, 1)" class="btn-cyber py-3 rounded-xl bg-slate-800 border border-emerald-500/40 text-emerald-300 font-bold">▼</button>
+          <button onclick="setSnakeDir(1, 0)" class="btn-cyber py-3 rounded-xl bg-slate-800 border border-emerald-500/40 text-emerald-300 font-bold">▶</button>
+        </div>
+      </div>
+
+      <!-- GAME 3: CYBER PONG -->
+      <div id="arcade-pong" class="hidden hud-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-display font-bold text-lg text-cyan-400">🏓 CYBER PONG (FIRST TO 5)</h3>
+            <p class="text-xs text-slate-400">Beat the AI to earn <span class="text-amber-300 font-bold">+30 Credits</span>! Drag on canvas or use buttons.</p>
+          </div>
+          <button onclick="startPong()" class="btn-cyber px-4 py-2 rounded-xl bg-cyan-500 text-black font-display font-bold text-xs">START MATCH</button>
+        </div>
+        <div class="max-w-2xl mx-auto rounded-2xl overflow-hidden border border-cyan-500/40 bg-black">
+          <canvas id="pong-canvas" class="w-full h-[270px] block touch-none"></canvas>
+        </div>
+        <div class="max-w-md mx-auto grid grid-cols-2 gap-3">
+          <button onpointerdown="movePongPaddle(-35)" class="btn-cyber py-3 rounded-xl bg-slate-800 border border-cyan-500/40 text-cyan-300 font-display font-bold text-sm">▲ UP</button>
+          <button onpointerdown="movePongPaddle(35)" class="btn-cyber py-3 rounded-xl bg-slate-800 border border-cyan-500/40 text-cyan-300 font-display font-bold text-sm">▼ DOWN</button>
+        </div>
+      </div>
+
+      <!-- GAME 4: TACTICAL TIC-TAC-TOE -->
+      <div id="arcade-ttt" class="hidden hud-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-display font-bold text-lg text-purple-400">❌ TACTICAL TIC-TAC-TOE</h3>
+            <p class="text-xs text-slate-400">Outsmart JARVIS to earn <span class="text-amber-300 font-bold">+20 Credits</span>!</p>
+          </div>
+          <button onclick="resetTTT()" class="btn-cyber px-4 py-2 rounded-xl bg-purple-600 text-white font-display font-bold text-xs">NEW BOARD</button>
+        </div>
+        <div id="ttt-status" class="text-center font-display font-bold text-base text-cyan-300">Your Turn (X)</div>
+        <div id="ttt-grid" class="max-w-[300px] mx-auto grid grid-cols-3 gap-2.5">
+          <!-- 9 cells generated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 5: DUAL AI HUB (JARVIS BEST FRIEND + LOZZINIHO YT)    -->
+    <!-- ========================================================= -->
+    <section id="tab-ai" class="tab-panel space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        
+        <!-- AI 1: JARVIS (Personal Best Friend & Confidant) -->
+        <div class="hud-card rounded-2xl p-4 sm:p-5 flex flex-col h-[560px]">
+          <div class="flex items-center justify-between pb-3 border-b border-cyan-500/25">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(0,243,255,0.3)]">🤖</div>
+              <div>
+                <h2 class="font-display font-bold text-base sm:text-lg text-white">JARVIS // BEST FRIEND AI</h2>
+                <div class="text-[11px] font-mono text-cyan-400">Loyal Confidant • Knows Anessa, Kyla & Your Journey</div>
+              </div>
+            </div>
+            <button onclick="clearJarvisChat()" class="text-[11px] font-mono text-slate-400 hover:text-cyan-300">Clear</button>
+          </div>
+
+          <!-- Chat History -->
+          <div id="jarvis-chat-box" class="flex-1 overflow-y-auto py-3 space-y-3 pr-1">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Quick Topic Prompts -->
+          <div class="flex gap-1.5 overflow-x-auto pb-2">
+            <button onclick="quickJarvisPrompt('Bro, I am thinking about Kyla again...')" class="shrink-0 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-300 hover:bg-purple-500/25">💭 About Kyla</button>
+            <button onclick="quickJarvisPrompt('Remind me how strong I became after Anessa.')" class="shrink-0 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/25">💔 Past with Anessa</button>
+            <button onclick="quickJarvisPrompt('Hype me up for football & grinding today!')" class="shrink-0 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25">⚡ Hype Me Up</button>
+          </div>
+
+          <!-- Input Bar -->
+          <form onsubmit="sendJarvisMessage(event)" class="flex gap-2 pt-2 border-t border-slate-800">
+            <input id="jarvis-input" type="text" required placeholder="Talk to JARVIS about anything, Master Liam..." class="flex-1 bg-black/70 border border-cyan-500/35 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+            <button type="submit" class="btn-cyber px-4 py-2.5 rounded-xl bg-cyan-500 text-black font-display font-bold text-xs sm:text-sm">SEND</button>
+          </form>
+        </div>
+
+        <!-- AI 2: LOZZINIHO (YouTube Creator Idea Generator) -->
+        <div class="hud-card-purple rounded-2xl p-4 sm:p-5 flex flex-col h-[560px]">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-purple-500/25">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-400 flex items-center justify-center text-xl">🎬</div>
+              <div>
+                <h2 class="font-display font-bold text-base sm:text-lg text-white">LOZZINIHO // YT STUDIO AI</h2>
+                <div class="text-[11px] font-mono text-rose-400">Generates 10 Viral Ideas • Choose = +15 Credits & Pin!</div>
+              </div>
+            </div>
+            <button onclick="generateLozzinihoIdeas()" class="btn-cyber px-3.5 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-display font-bold text-xs shadow-[0_0_15px_rgba(244,63,94,0.35)]">
+              ⚡ GENERATE 10 IDEAS
+            </button>
+          </div>
+
+          <!-- Optional Niche Focus -->
+          <div class="mt-3 flex gap-2">
+            <select id="yt-niche-select" class="flex-1 bg-black/70 border border-purple-500/35 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-purple-400">
+              <option value="all">🔥 All Channels (Brawl Stars, FC Mobile, Football, Roblox, IRL)</option>
+              <option value="brawlstars">⭐ Brawl Stars & Gaming Challenges</option>
+              <option value="football">⚽ Football Skills, FC Mobile & Edits</option>
+              <option value="irl">🎥 IRL Self-Improvement, Aesthetic & Vlogs</option>
+            </select>
+          </div>
+
+          <!-- 10 Generated Ideas List -->
+          <div id="lozziniho-ideas-list" class="flex-1 overflow-y-auto mt-3 space-y-2.5 pr-1">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 6: NEON NIGHT CITY VISUALIZER (INTERACTIVE SIMULATION)-->
+    <!-- ========================================================= -->
+    <section id="tab-city" class="tab-panel space-y-4">
+      <div class="hud-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-widest">CYBERPUNK SANCTUARY</div>
+            <h2 class="font-display font-bold text-xl text-white">🌃 NEON NIGHT CITY VISUALIZER</h2>
+            <p class="text-xs text-slate-400">Relax, focus, or think while watching citizens walk beneath glowing neon skyscrapers.</p>
+          </div>
+
+          <!-- City Controls: Scene, Weather, Time -->
+          <div class="flex flex-wrap gap-2">
+            <select id="city-scene-select" onchange="updateCitySettings()" class="bg-black/80 border border-cyan-500/40 rounded-xl px-3 py-2 text-xs font-mono text-cyan-300 focus:outline-none">
+              <option value="neotokyo">🏙️ Scene: Neo-Tokyo</option>
+              <option value="cyberseoul">💜 Scene: Cyber Seoul</option>
+              <option value="shibuya">✨ Scene: Gold Shibuya</option>
+              <option value="harbor">🌊 Scene: Orbital Harbor</option>
+            </select>
+
+            <select id="city-weather-select" onchange="updateCitySettings()" class="bg-black/80 border border-purple-500/40 rounded-xl px-3 py-2 text-xs font-mono text-purple-300 focus:outline-none">
+              <option value="rain">🌧️ Weather: Cyber Rain</option>
+              <option value="clear">🌌 Weather: Clear Neon</option>
+              <option value="snow">❄️ Weather: Neon Snow</option>
+              <option value="mist">🌫️ Weather: Midnight Mist</option>
+            </select>
+
+            <select id="city-time-select" onchange="updateCitySettings()" class="bg-black/80 border border-amber-500/40 rounded-xl px-3 py-2 text-xs font-mono text-amber-300 focus:outline-none">
+              <option value="midnight">🕛 Time: Midnight</option>
+              <option value="dusk">🌆 Time: Neon Dusk</option>
+              <option value="witching">🕒 Time: 3:00 AM Deep</option>
+              <option value="dawn">🌅 Time: Cyber Dawn</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Full Interactive Night City Canvas -->
+        <div class="relative w-full rounded-2xl overflow-hidden border border-cyan-500/40 shadow-[0_0_30px_rgba(0,243,255,0.12)]">
+          <canvas id="city-canvas" class="w-full h-[380px] sm:h-[460px] block"></canvas>
+          <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md border border-cyan-500/30 rounded-xl px-3 py-1.5 text-[11px] font-mono text-cyan-300">
+            STATUS: AMBIENT OBSERVATION MODE • TAP SKYLINE TO SPAWN NEON DRONES
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAVIGATION DOCK (MOBILE & IPAD OPTIMIZED) -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#050508]/95 backdrop-blur-lg border-t border-cyan-500/25 px-2 py-2">
+    <div class="max-w-3xl mx-auto grid grid-cols-6 gap-1">
+      <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-cyan-300 bg-cyan-500/15 border border-cyan-400/40">
+        <span class="text-lg">⚡</span>
+        <span class="text-[10px] font-display font-bold mt-0.5">SYSTEM</span>
+      </button>
+      <button onclick="switchTab('calendar')" id="nav-calendar" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-white">
+        <span class="text-lg">📅</span>
+        <span class="text-[10px] font-display font-bold mt-0.5">CALENDAR</span>
+      </button>
+      <button onclick="switchTab('shop')" id="nav-shop" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-white">
+        <span class="text-lg">🥚</span>
+        <span class="text-[10px] font-display font-bold mt-0.5">PETS</span>
+      </button>
+      <button onclick="switchTab('arcade')" id="nav-arcade" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-white">
+        <span class="text-lg">🕹️</span>
+        <span class="text-[10px] font-display font-bold mt-0.5">ARCADE</span>
+      </button>
+      <button onclick="switchTab('ai')" id="nav-ai" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-white">
+        <span class="text-lg">🤖</span>
+        <span class="text-[10px] font-display font-bold mt-0.5">JARVIS AI</span>
+      </button>
+      <button onclick="switchTab('city')" id="nav-city" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-white">
+        <span class="text-lg">🌃</span>
+        <span class="text-[10px] font-display font-bold mt-0.5">CITY</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========================================================= -->
+  <!-- SYSTEM MODAL OVERLAY (REWARDS, ENERGY BOOST, MOTIVATION, PRAY) -->
+  <!-- ========================================================= -->
+  <div id="system-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="system-modal-card" class="w-full max-w-md hud-card rounded-3xl p-6 text-center space-y-4 relative border-2 border-cyan-400 shadow-[0_0_40px_rgba(0,243,255,0.25)]">
+      <div id="modal-badge" class="inline-block text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 tracking-widest uppercase">
+        SYSTEM NOTIFICATION
+      </div>
+      <div id="modal-icon" class="text-6xl mx-auto">🎁</div>
+      <h3 id="modal-title" class="font-display font-black text-2xl text-white">QUEST CLEARED!</h3>
+      <p id="modal-body" class="text-sm sm:text-base text-slate-200 leading-relaxed">
+        Reward unlocked!
+      </p>
+      <div id="modal-extra" class="text-xs font-mono text-amber-300"></div>
+      <div id="modal-actions" class="pt-2 flex gap-2 justify-center">
+        <button onclick="closeModal()" class="btn-cyber px-6 py-2.5 rounded-xl bg-cyan-500 text-black font-display font-bold text-sm hover:bg-cyan-400">
+          ACKNOWLEDGE
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- JAVASCRIPT LOGIC & DATA ENGINE                            -->
+  <!-- ========================================================= -->
+  <script>
+    // -----------------------------------------------------------
+    // 1. DEFAULT DATA & STATE MANAGEMENT (LOCALSTORAGE)
+    // -----------------------------------------------------------
+    const DAYS_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const DAYS_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    const DEFAULT_REWARDS = [
+      "20 minutes of watching YouTube",
+      "20 minutes of scrolling reels on Instagram",
+      "A random food from home",
+      "1 match of playing FC Mobile",
+      "2 matches of Brawl Stars",
+      "A random obby for Roblox",
+      "1 match of Fortnite",
+      "3 matches of Street Fighter",
+      "10 minutes of a random game in my game station"
+    ];
+
+    const DEFAULT_ENERGY_ACTIVITIES = [
+      "10 Explosive Push-ups",
+      "20 Push-ups (Full Range)",
+      "5 Minutes Shadow Boxing (Fast Combos)",
+      "1 Minute Core Plank",
+      "30 High-Knee Sprints in Place",
+      "25 Bodyweight Squats",
+      "2 Minutes Football Footwork / Toe Taps",
+      "15 Diamond Push-ups"
+    ];
+
+    const QUEST_POOL = [
+      "Complete 25 push-ups with clean form",
+      "Focus on deep study / work for 25 uninterrupted minutes",
+      "Drink 2 full glasses of water right now",
+      "Practice 5 minutes of shadow boxing footwork",
+      "Clean and organize your desk & setup",
+      "Read 10 pages or learn 1 new skill concept",
+      "Hold a 90-second plank without dropping",
+      "Stretch legs and shoulders for 5 minutes",
+      "Brainstorm 3 video hooks for your YouTube channel",
+      "Do 30 squats + 20 calf raises"
+    ];
+
+    const MOTIVATION_QUOTES = [
+      "The System chose you, Master Liam. Weakness is a choice—stand up and clear the next quest.",
+      "Heartbreak with Anessa and unrequited feelings for Kyla didn't break you; they forged your armor. Turn that pain into discipline.",
+      "Champions don't wait to feel motivated. They execute when they're tired, sore, and doubted.",
+      "Every push-up, every study session, every video uploaded separates the future you from everyone who quit.",
+      "Solo Leveling rule #1: If you don't fight, you don't level up. Arise, Master Liam!",
+      "Your future self is watching right now. Make him proud of the discipline you show today.",
+      "You don't chase people who aren't meant for you—you build an empire so strong your own life becomes legendary."
+    ];
+
+    const DAILY_SONGS = [
+      { title: "Believer", artist: "Imagine Dragons", vibe: "Pure adrenaline & turning past pain into unstoppable strength." },
+      { title: "Lose Yourself", artist: "Eminem", vibe: "Zero excuses. Lock in and seize every single opportunity." },
+      { title: "Starboy", artist: "The Weeknd", vibe: "Late-night neon city energy and main-character confidence." },
+      { title: "Hall of Fame", artist: "The Script ft. will.i.am", vibe: "Champion mindset for exams, football, and big dreams." },
+      { title: "Blinding Lights", artist: "The Weeknd", vibe: "Midnight cyberpunk synthwave fuel for late-night grinding." },
+      { title: "Centuries", artist: "Fall Out Boy", vibe: "Epic boss-battle anthem to make your mark on the world." },
+      { title: "Legends Never Die", artist: "League of Legends", vibe: "Rising from every setback stronger than before." }
+    ];
+
+    const DAILY_FACTS = [
+      { cat: "STRAY KIDS", text: "Stray Kids' self-producing trio 3RACHA (Bang Chan, Changbin, Han) writes and produces almost their entire discography—proving consistent daily creation beats everything." },
+      { cat: "BTS", text: "Before debuting as global icons, BTS practiced up to 12–15 hours a day in a tiny basement studio, turning relentless discipline into history." },
+      { cat: "FOOTBALL", text: "Cristiano Ronaldo reportedly sleeps in five 90-minute cycles per day and trains his core even while watching TV to maintain peak athleticism." },
+      { cat: "CINEMA", text: "In Iron Man (2008), Robert Downey Jr. improvised the iconic final line 'I am Iron Man', which completely changed the direction of the entire Marvel Universe." },
+      { cat: "SCIENCE", text: "Your brain releases dopamine not just when you get a reward, but when you make visible progress toward a goal—which is why checklists feel so satisfying." },
+      { cat: "GAMING", text: "Street Fighter's famous 'combo' system was originally discovered by accident during Street Fighter II testing when players cancelled one attack animation into another!" },
+      { cat: "SPORTS", text: "A regulation football has 32 panels (20 hexagons and 12 pentagons)—the exact same geometric structure as a Carbon-60 'Buckyball' molecule." }
+    ];
+
+    const DAILY_PRAYERS = [
+      "Lord God, thank You for waking me up today with strength in my body and fire in my spirit. Guard my heart from past hurts, give me wisdom in my studies, sharpness on the football pitch, and discipline in everything I build. Amen.",
+      "Heavenly Father, grant me peace where there was once heartbreak, clarity where there is confusion, and courage to chase the destiny You placed inside me. Bless my family, my work, and my journey. Amen.",
+      "God, thank You for every lesson—even the painful ones. Make me resilient, humble, and focused today. Help me use my talents to inspire others and honor You in all I do. Amen.",
+      "Lord, steady my mind when I feel like quitting. Fill me with Your strength, protect my path, and guide my steps toward success, joy, and purpose. Amen."
+    ];
+
+    // 10 Eggs & Corresponding Pets
+    const EGGS_CATALOG = [
+      { id: 'egg1', name: 'Cyber Scout Egg', price: 60, hatchesNeeded: 2, rarity: 'COMMON', color: 'text-slate-300', eggEmoji: '🥚', petId: 'pet1', petName: 'Mini Arc Drone', petEmoji: '🤖', petQuote: '"All systems nominal, Master Liam!"' },
+      { id: 'egg2', name: 'Neon Viper Egg', price: 100, hatchesNeeded: 3, rarity: 'COMMON', color: 'text-emerald-400', eggEmoji: '🟢', petId: 'pet2', petName: 'Circuit Viper', petEmoji: '🐍', petQuote: '"Strike fast. Hesitation is defeat."' },
+      { id: 'egg3', name: 'Volt Hound Egg', price: 150, hatchesNeeded: 4, rarity: 'RARE', color: 'text-cyan-400', eggEmoji: '🔵', petId: 'pet3', petName: 'Cyber Wolf Fenrir', petEmoji: '🐺', petQuote: '"The pack hunts together, Master Liam."' },
+      { id: 'egg4', name: 'Striker Falcon Egg', price: 210, hatchesNeeded: 5, rarity: 'RARE', color: 'text-sky-400', eggEmoji: '💠', petId: 'pet4', petName: 'Aero Hawk', petEmoji: '🦅', petQuote: '"Eyes on the goal. Never miss your shot."' },
+      { id: 'egg5', name: 'Shadow Panther Egg', price: 280, hatchesNeeded: 6, rarity: 'EPIC', color: 'text-purple-400', eggEmoji: '🟣', petId: 'pet5', petName: 'Shadow Panther', petEmoji: '🐆', petQuote: '"Move in silence, let success make the noise."' },
+      { id: 'egg6', name: 'Crimson Oni Egg', price: 360, hatchesNeeded: 7, rarity: 'EPIC', color: 'text-rose-400', eggEmoji: '🔴', petId: 'pet6', petName: 'Shura Samurai', petEmoji: '👹', petQuote: '"1000 strikes forge an unbreakable blade!"' },
+      { id: 'egg7', name: 'Solar Phoenix Egg', price: 460, hatchesNeeded: 8, rarity: 'LEGENDARY', color: 'text-amber-400', eggEmoji: '🟠', petId: 'pet7', petName: 'Ignis Phoenix', petEmoji: '🔥', petQuote: '"From every ash, we rise brighter!"' },
+      { id: 'egg8', name: 'Abyss Leviathan Egg', price: 580, hatchesNeeded: 10, rarity: 'LEGENDARY', color: 'text-indigo-400', eggEmoji: '🔮', petId: 'pet8', petName: 'Void Dragon', petEmoji: '🐉', petQuote: '"Your aura grows stronger with every quest."' },
+      { id: 'egg9', name: 'Chrono Titan Egg', price: 750, hatchesNeeded: 12, rarity: 'MYTHIC', color: 'text-fuchsia-400', eggEmoji: '💎', petId: 'pet9', petName: 'Mecha Sovereign', petEmoji: '🦾', petQuote: '"Time bends to those who master their habits."' },
+      { id: 'egg10', name: 'Shadow Monarch Egg', price: 1000, hatchesNeeded: 15, rarity: 'SOVEREIGN', color: 'text-yellow-300', eggEmoji: '👑', petId: 'pet10', petName: 'Igris Shadow Knight', petEmoji: '⚔️', petQuote: '"My sword is yours forever, my Liege Liam."' }
+    ];
+
+    // Load or Initialize State
+    let state = JSON.parse(localStorage.getItem('jarvis_liam_os_v2')) || {
+      credits: 150,
+      lastResetDate: '',
+      selectedHabitDay: new Date().getDay(),
+      habits: [
+        { id: 'h1', title: 'Morning Push-ups & Stretch', days: [1, 2, 3, 4, 5], completedDates: [] },
+        { id: 'h2', title: 'Study / Exam Prep (45 mins)', days: [1, 2, 3, 4, 5], completedDates: [] },
+        { id: 'h3', title: 'Football Training & Footwork', days: [2, 4, 6], completedDates: [] },
+        { id: 'h4', title: 'Film or Edit YouTube Content', days: [0, 6], completedDates: [] }
+      ],
+      specialEvents: [
+        { id: 'e1', title: 'Inter-School Football Competition', date: '2026-11-28', category: '⚽ Football Match', done: false },
+        { id: 'e2', title: 'End of Term Mathematics Exam', date: '2026-12-05', category: '📚 Exam / Test', done: false }
+      ],
+      dailyQuests: [],
+      rewardsPool: [...DEFAULT_REWARDS],
+      energyActivities: [...DEFAULT_ENERGY_ACTIVITIES],
+      unlockedPets: ['pet1'],
+      equippedPet: 'pet1',
+      incubatingEgg: null, // { eggId, progress, needed }
+      pinnedYoutube: '',
+      jarvisChat: [
+        { sender: 'jarvis', text: 'Welcome back, Master Liam. All HUD systems are online. Whether we are grinding habits, planning your next viral YouTube upload, or just talking through life—I am right here with you.' }
+      ],
+      ytIdeas: []
+    };
+
+    function saveState() {
+      localStorage.setItem('jarvis_liam_os_v2', JSON.stringify(state));
+      updateTopHUD();
+    }
+
+    function getTodayDateStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    // -----------------------------------------------------------
+    // 2. DAILY RESET ENGINE (QUESTS, MUSIC, FACTS, PRAYERS)
+    // -----------------------------------------------------------
+    function checkDailyReset() {
+      const today = getTodayDateStr();
+      if (state.lastResetDate !== today || !state.dailyQuests || state.dailyQuests.length === 0) {
+        state.lastResetDate = today;
+        generateThreeDailyQuests();
+        saveState();
+      }
+      renderDailyContent();
+    }
+
+    function generateThreeDailyQuests() {
+      const shuffled = [...QUEST_POOL].sort(() => 0.5 - Math.random());
+      state.dailyQuests = shuffled.slice(0, 3).map((text, idx) => ({
+        id: 'dq_' + Date.now() + '_' + idx,
+        title: text,
+        done: false
+      }));
+    }
+
+    function rerollDailyQuests() {
+      generateThreeDailyQuests();
+      saveState();
+      renderDailyQuests();
+    }
+
+    function renderDailyContent() {
+      const dayIndex = new Date().getDate();
+      const song = DAILY_SONGS[dayIndex % DAILY_SONGS.length];
+      document.getElementById('daily-song-title').textContent = song.title;
+      document.getElementById('daily-song-artist').textContent = song.artist;
+      document.getElementById('daily-song-vibe').textContent = song.vibe;
+
+      const fact = DAILY_FACTS[dayIndex % DAILY_FACTS.length];
+      document.getElementById('daily-fact-category').textContent = fact.cat;
+      document.getElementById('daily-fact-text').textContent = fact.text;
+    }
+
+    // -----------------------------------------------------------
+    // 3. LIVE CLOCK & TOP HUD UPDATER
+    // -----------------------------------------------------------
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+      document.getElementById('hud-date').textContent = now.toLocaleDateString('en-US', options).toUpperCase();
+      document.getElementById('hud-time').textContent = now.toLocaleTimeString('en-US', { hour12: false });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function updateTopHUD() {
+      document.getElementById('hud-credits').textContent = state.credits;
+      const petObj = EGGS_CATALOG.find(e => e.petId === state.equippedPet) || EGGS_CATALOG[0];
+
+      document.getElementById('hud-pet-avatar').textContent = petObj.petEmoji;
+      document.getElementById('hud-pet-name').textContent = petObj.petName.toUpperCase();
+      document.getElementById('hud-pet-speech').textContent = petObj.petQuote;
+
+      document.getElementById('stage-pet-emoji').textContent = petObj.petEmoji;
+      document.getElementById('stage-pet-bg').textContent = petObj.petEmoji;
+      document.getElementById('stage-pet-name').textContent = petObj.petName;
+      document.getElementById('stage-pet-rarity').textContent = petObj.rarity;
+      document.getElementById('stage-pet-quote').textContent = petObj.petQuote;
+
+      // Incubator HUD
+      if (state.incubatingEgg) {
+        const eggInfo = EGGS_CATALOG.find(e => e.id === state.incubatingEgg.eggId);
+        const pct = Math.min(100, Math.round((state.incubatingEgg.progress / eggInfo.hatchesNeeded) * 100));
+        document.getElementById('incubator-emoji').textContent = eggInfo.eggEmoji;
+        document.getElementById('incubator-name').textContent = eggInfo.name;
+        document.getElementById('incubator-progress-text').textContent = `${state.incubatingEgg.progress} / ${eggInfo.hatchesNeeded} Tasks to Hatch`;
+        document.getElementById('incubator-bar').style.width = pct + '%';
+
+        document.getElementById('shop-incubator-icon').textContent = eggInfo.eggEmoji;
+        document.getElementById('shop-incubator-title').textContent = `${eggInfo.name} (${state.incubatingEgg.progress}/${eggInfo.hatchesNeeded})`;
+        document.getElementById('shop-incubator-desc').textContent = `Complete ${eggInfo.hatchesNeeded - state.incubatingEgg.progress} more task(s) to hatch ${eggInfo.petName}!`;
+        document.getElementById('instant-hatch-btn').classList.remove('hidden');
+      } else {
+        document.getElementById('incubator-emoji').textContent = '🥚';
+        document.getElementById('incubator-name').textContent = 'No Egg Incubating';
+        document.getElementById('incubator-progress-text').textContent = 'Visit Pet Shop to incubate an egg!';
+        document.getElementById('incubator-bar').style.width = '0%';
+
+        document.getElementById('shop-incubator-icon').textContent = '🥚';
+        document.getElementById('shop-incubator-title').textContent = 'Empty Chamber';
+        document.getElementById('shop-incubator-desc').textContent = 'Purchase any of the 10 Eggs below. Completing tasks hatches them!';
+        document.getElementById('instant-hatch-btn').classList.add('hidden');
+      }
+
+      // Pinned YouTube Idea
+      if (state.pinnedYoutube) {
+        document.getElementById('pinned-yt-title').textContent = state.pinnedYoutube;
+        document.getElementById('complete-yt-btn').classList.remove('hidden');
+      } else {
+        document.getElementById('pinned-yt-title').textContent = 'No video pinned yet. Ask Lozziniho for 10 viral ideas!';
+        document.getElementById('complete-yt-btn').classList.add('hidden');
+      }
+    }
+
+    function petInteract() {
+      const el = document.getElementById('stage-pet-emoji');
+      const hudEl = document.getElementById('hud-pet-avatar');
+      el.classList.remove('pet-excited');
+      hudEl.classList.remove('pet-excited');
+      void el.offsetWidth;
+      el.classList.add('pet-excited');
+      hudEl.classList.add('pet-excited');
+
+      const lines = [
+        '"Let’s crush one more task, Master Liam!"',
+        '"You’re unstoppable today! Keep leveling up!"',
+        '"Need an Energy Boost? Hit the lightning button!"',
+        '"Anessa and Kyla are in the past—your future is legendary!"',
+        '"Every habit ticked brings my next evolution closer!"'
+      ];
+      const pick = lines[Math.floor(Math.random() * lines.length)];
+      document.getElementById('stage-pet-quote').textContent = pick;
+      document.getElementById('hud-pet-speech').textContent = pick;
+    }
+
+    // -----------------------------------------------------------
+    // 4. REWARD LOOT SYSTEM & EGG HATCHING PROGRESSION
+    // -----------------------------------------------------------
+    function awardTaskCompletion(creditsEarned, sourceLabel) {
+      state.credits += creditsEarned;
+
+      // Advance Egg Incubation
+      let hatchedPet = null;
+      if (state.incubatingEgg) {
+        state.incubatingEgg.progress += 1;
+        const eggInfo = EGGS_CATALOG.find(e => e.id === state.incubatingEgg.eggId);
+        if (state.incubatingEgg.progress >= eggInfo.hatchesNeeded) {
+          if (!state.unlockedPets.includes(eggInfo.petId)) {
+            state.unlockedPets.push(eggInfo.petId);
+          }
+          state.equippedPet = eggInfo.petId;
+          hatchedPet = eggInfo;
+          state.incubatingEgg = null;
+        }
+      }
+
+      saveState();
+      renderShop();
+
+      // Pick Random Reward from Master Liam's Pool
+      const pool = state.rewardsPool.length > 0 ? state.rewardsPool : DEFAULT_REWARDS;
+      const randomReward = pool[Math.floor(Math.random() * pool.length)];
+
+      if (hatchedPet) {
+        showModal(
+          'EGG HATCHED + REWARD UNLOCKED!',
+          hatchedPet.petEmoji,
+          `NEW ${hatchedPet.rarity} PET: ${hatchedPet.petName.toUpperCase()}!`,
+          `You cleared "${sourceLabel}"! Your egg cracked open AND you unlocked your task reward:\n\n🎁 ${randomReward}`,
+          `+${creditsEarned} Credits Earned • ${hatchedPet.petName} Equipped!`
+        );
+      } else {
+        showModal(
+          'QUEST CLEARED — LOOT UNLOCKED',
+          '🎁',
+          randomReward,
+          `Awesome discipline on "${sourceLabel}", Master Liam! Enjoy your randomized reward.`,
+          `+${creditsEarned} Credits Earned`
+        );
+      }
+    }
+
+    // -----------------------------------------------------------
+    // 5. HABITS, DAILY QUESTS & SPECIAL EVENTS RENDERING
+    // -----------------------------------------------------------
+    function renderHomeTasks() {
+      const todayIdx = new Date().getDay();
+      const todayStr = getTodayDateStr();
+      document.getElementById('today-day-name').textContent = DAYS_FULL[todayIdx].toUpperCase();
+
+      const todaysHabits = state.habits.filter(h => h.days.includes(todayIdx));
+      const doneCount = todaysHabits.filter(h => h.completedDates.includes(todayStr)).length;
+      document.getElementById('today-progress-badge').textContent = `${doneCount} / ${todaysHabits.length} Done`;
+
+      const container = document.getElementById('today-habits-list');
+      if (todaysHabits.length === 0) {
+        container.innerHTML = `<div class="text-center py-6 text-sm text-slate-400">No habits scheduled for ${DAYS_FULL[todayIdx]}. Tap <strong>+ EDIT</strong> to schedule your routine!</div>`;
+        return;
+      }
+
+      container.innerHTML = todaysHabits.map(h => {
+        const isDone = h.completedDates.includes(todayStr);
+        return `
+          <div onclick="toggleHabitToday('${h.id}')" class="cursor-pointer flex items-center justify-between p-3 rounded-xl border transition ${isDone ? 'bg-emerald-950/30 border-emerald-500/40 opacity-75' : 'bg-black/50 border-cyan-500/25 hover:border-cyan-400'}">
+            <div class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-lg flex items-center justify-center border ${isDone ? 'bg-emerald-500 border-emerald-400 text-black font-bold' : 'border-cyan-400/60'}">
+                ${isDone ? '✓' : ''}
+              </div>
+              <span class="text-sm sm:text-base font-semibold ${isDone ? 'line-through text-slate-400' : 'text-white'}">${h.title}</span>
+            </div>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded ${isDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/15 text-amber-300'}">
+              ${isDone ? 'CLEARED' : '+20 🪙 + LOOT'}
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleHabitToday(habitId) {
+      const todayStr = getTodayDateStr();
+      const habit = state.habits.find(h => h.id === habitId);
+      if (!habit) return;
+
+      const idx = habit.completedDates.indexOf(todayStr);
+      if (idx === -1) {
+        habit.completedDates.push(todayStr);
+        saveState();
+        renderHomeTasks();
+        renderCalendarHabits();
+        awardTaskCompletion(20, habit.title);
+      } else {
+        habit.completedDates.splice(idx, 1);
+        saveState();
+        renderHomeTasks();
+        renderCalendarHabits();
+      }
+    }
+
+    function renderDailyQuests() {
+      const container = document.getElementById('daily-quests-list');
+      container.innerHTML = state.dailyQuests.map(q => `
+        <div onclick="toggleDailyQuest('${q.id}')" class="cursor-pointer flex items-center justify-between p-3 rounded-xl border transition ${q.done ? 'bg-amber-950/25 border-amber-500/40 opacity-70' : 'bg-black/55 border-amber-500/30 hover:border-amber-400'}">
+          <div class="flex items-center gap-3">
+            <div class="w-6 h-6 rounded-lg flex items-center justify-center border ${q.done ? 'bg-amber-400 border-amber-300 text-black font-bold' : 'border-amber-400/60'}">
+              ${q.done ? '✓' : ''}
+            </div>
+            <span class="text-sm font-semibold ${q.done ? 'line-through text-slate-400' : 'text-white'}">${q.title}</span>
+          </div>
+          <span class="text-[11px] font-mono text-amber-300 shrink-0 ml-2">${q.done ? 'DONE' : '+25 🪙'}</span>
+        </div>
+      `).join('');
+    }
+
+    function toggleDailyQuest(questId) {
+      const q = state.dailyQuests.find(item => item.id === questId);
+      if (!q || q.done) return;
+      q.done = true;
+      saveState();
+      renderDailyQuests();
+      awardTaskCompletion(25, q.title);
+    }
+
+    // -----------------------------------------------------------
+    // 6. DUAL CALENDAR MANAGEMENT (HABITS + SPECIAL EVENTS)
+    // -----------------------------------------------------------
+    let newHabitSelectedDays = [1, 2, 3, 4, 5];
+
+    function renderCalendarHabits() {
+      // Day selector tabs
+      const selContainer = document.getElementById('habit-day-selector');
+      selContainer.innerHTML = DAYS_SHORT.map((d, i) => {
+        const active = state.selectedHabitDay === i;
+        return `
+          <button onclick="selectHabitCalendarDay(${i})" class="py-2 rounded-xl font-display font-bold text-xs border transition ${active ? 'bg-cyan-500 text-black border-cyan-300 shadow-[0_0_12px_rgba(0,243,255,0.4)]' : 'bg-black/60 text-slate-400 border-slate-800 hover:text-white'}">
+            ${d.toUpperCase()}
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('selected-habit-day-label').textContent = `${DAYS_FULL[state.selectedHabitDay].toUpperCase()} SCHEDULE`;
+
+      const todayIdx = new Date().getDay();
+      const todayStr = getTodayDateStr();
+      const dayHabits = state.habits.filter(h => h.days.includes(state.selectedHabitDay));
+      const listEl = document.getElementById('selected-day-habits-list');
+
+      if (dayHabits.length === 0) {
+        listEl.innerHTML = `<div class="text-xs text-slate-500 py-3 text-center">No habits assigned to ${DAYS_FULL[state.selectedHabitDay]} yet.</div>`;
+      } else {
+        listEl.innerHTML = dayHabits.map(h => {
+          const isToday = state.selectedHabitDay === todayIdx;
+          const isDoneToday = isToday && h.completedDates.includes(todayStr);
+          return `
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div onclick="${isToday ? `toggleHabitToday('${h.id}')` : ''}" class="flex items-center gap-2.5 ${isToday ? 'cursor-pointer' : ''}">
+                <span class="w-5 h-5 rounded flex items-center justify-center text-xs border ${isDoneToday ? 'bg-emerald-500 border-emerald-400 text-black font-bold' : 'border-cyan-500/50 text-cyan-400'}">
+                  ${isDoneToday ? '✓' : '•'}
+                </span>
+                <span class="text-sm font-semibold ${isDoneToday ? 'line-through text-slate-400' : 'text-white'}">${h.title}</span>
+              </div>
+              <button onclick="deleteHabit('${h.id}')" class="text-xs text-rose-400 hover:text-rose-300 px-2 py-1">✕</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Day Toggle Checkboxes for Adding Habit
+      const cbContainer = document.getElementById('habit-days-checkboxes');
+      cbContainer.innerHTML = DAYS_SHORT.map((d, i) => {
+        const checked = newHabitSelectedDays.includes(i);
+        return `
+          <button type="button" onclick="toggleNewHabitDay(${i})" class="py-1.5 rounded-lg font-mono text-xs border ${checked ? 'bg-cyan-500/25 border-cyan-400 text-cyan-200 font-bold' : 'bg-black/60 border-slate-800 text-slate-500'}">
+            ${d}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectHabitCalendarDay(dayIdx) {
+      state.selectedHabitDay = dayIdx;
+      renderCalendarHabits();
+    }
+
+    function toggleNewHabitDay(dayIdx) {
+      const idx = newHabitSelectedDays.indexOf(dayIdx);
+      if (idx === -1) newHabitSelectedDays.push(dayIdx);
+      else if (newHabitSelectedDays.length > 1) newHabitSelectedDays.splice(idx, 1);
+      renderCalendarHabits();
+    }
+
+    function addHabit(e) {
+      e.preventDefault();
+      const input = document.getElementById('habit-title-input');
+      const title = input.value.trim();
+      if (!title) return;
+
+      state.habits.push({
+        id: 'h_' + Date.now(),
+        title,
+        days: [...newHabitSelectedDays].sort(),
+        completedDates: []
+      });
+      input.value = '';
+      saveState();
+      renderHomeTasks();
+      renderCalendarHabits();
+    }
+
+    function deleteHabit(id) {
+      state.habits = state.habits.filter(h => h.id !== id);
+      saveState();
+      renderHomeTasks();
+      renderCalendarHabits();
+    }
+
+    // Special Events Calendar
+    function addSpecialEvent(e) {
+      e.preventDefault();
+      const title = document.getElementById('event-title-input').value.trim();
+      const date = document.getElementById('event-date-input').value;
+      const category = document.getElementById('event-category-input').value;
+      if (!title || !date) return;
+
+      state.specialEvents.push({
+        id: 'ev_' + Date.now(),
+        title,
+        date,
+        category,
+        done: false
+      });
+      state.specialEvents.sort((a, b) => a.date.localeCompare(b.date));
+      document.getElementById('event-title-input').value = '';
+      saveState();
+      renderSpecialEvents();
+    }
+
+    function toggleSpecialEvent(id) {
+      const ev = state.specialEvents.find(item => item.id === id);
+      if (!ev) return;
+      ev.done = !ev.done;
+      saveState();
+      renderSpecialEvents();
+      if (ev.done) {
+        awardTaskCompletion(40, `Special Event: ${ev.title}`);
+      }
+    }
+
+    function deleteSpecialEvent(id) {
+      state.specialEvents = state.specialEvents.filter(item => item.id !== id);
+      saveState();
+      renderSpecialEvents();
+    }
+
+    function renderSpecialEvents() {
+      const listEl = document.getElementById('special-events-list');
+      const homeEl = document.getElementById('home-special-events');
+
+      if (state.specialEvents.length === 0) {
+        const emptyMsg = `<div class="text-xs text-slate-400 text-center py-4">No special events added yet. Add football matches or exams!</div>`;
+        listEl.innerHTML = emptyMsg;
+        homeEl.innerHTML = emptyMsg;
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const html = state.specialEvents.map(ev => {
+        const evDate = new Date(ev.date + 'T00:00:00');
+        const diffDays = Math.ceil((evDate - today) / (1000 * 60 * 60 * 24));
+        let countdownText = diffDays === 0 ? 'TODAY!' : diffDays > 0 ? `In ${diffDays} day(s)` : `${Math.abs(diffDays)}d ago`;
+
+        return `
+          <div class="flex items-center justify-between p-3 rounded-xl border ${ev.done ? 'bg-purple-950/20 border-purple-500/20 opacity-65' : 'bg-black/55 border-purple-500/35'}">
+            <div onclick="toggleSpecialEvent('${ev.id}')" class="cursor-pointer flex items-center gap-3">
+              <div class="w-6 h-6 rounded-lg border flex items-center justify-center ${ev.done ? 'bg-purple-500 border-purple-400 text-white font-bold' : 'border-purple-400/60'}">
+                ${ev.done ? '✓' : ''}
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">${ev.category}</span>
+                  <span class="text-[11px] font-mono text-amber-300">${ev.date} (${countdownText})</span>
+                </div>
+                <div class="text-sm font-bold mt-0.5 ${ev.done ? 'line-through text-slate-400' : 'text-white'}">${ev.title}</div>
+              </div>
+            </div>
+            <button onclick="deleteSpecialEvent('${ev.id}')" class="text-xs text-rose-400 hover:text-rose-300 px-2 py-1">✕</button>
+          </div>
+        `;
+      }).join('');
+
+      listEl.innerHTML = html;
+      homeEl.innerHTML = state.specialEvents.slice(0, 3).map(ev => `
+        <div onclick="toggleSpecialEvent('${ev.id}')" class="cursor-pointer flex items-center justify-between p-2.5 rounded-xl bg-black/50 border border-purple-500/25 hover:border-purple-400">
+          <div>
+            <span class="text-[10px] font-mono text-purple-300">${ev.category} • ${ev.date}</span>
+            <div class="text-sm font-bold ${ev.done ? 'line-through text-slate-400' : 'text-white'}">${ev.title}</div>
+          </div>
+          <span class="text-xs font-mono text-amber-300">${ev.done ? '✓ DONE' : '+40 🪙'}</span>
+        </div>
+      `).join('');
+    }
+
+    // -----------------------------------------------------------
+    // 7. REWARDS POOL, ENERGY BOOSTERS, MOTIVATION & PRAYER
+    // -----------------------------------------------------------
+    function renderRewardsPool() {
+      const container = document.getElementById('rewards-pool-tags');
+      container.innerHTML = state.rewardsPool.map((r, i) => `
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-950/50 border border-cyan-500/30 text-xs text-cyan-100">
+          <span>🎁 ${r}</span>
+          <button onclick="removeReward(${i})" class="text-slate-400 hover:text-rose-400 font-bold">×</button>
+        </span>
+      `).join('');
+    }
+
+    function addCustomReward(e) {
+      e.preventDefault();
+      const input = document.getElementById('new-reward-input');
+      const val = input.value.trim();
+      if (!val) return;
+      state.rewardsPool.push(val);
+      input.value = '';
+      saveState();
+      renderRewardsPool();
+    }
+
+    function removeReward(idx) {
+      if (state.rewardsPool.length <= 1) return;
+      state.rewardsPool.splice(idx, 1);
+      saveState();
+      renderRewardsPool();
+    }
+
+    function addCustomEnergy(e) {
+      e.preventDefault();
+      const input = document.getElementById('new-energy-input');
+      const val = input.value.trim();
+      if (!val) return;
+      state.energyActivities.push(val);
+      input.value = '';
+      saveState();
+      showModal('BOOSTER ADDED', '⚡', 'Energy Activity Saved!', `"${val}" has been added to your Energy Ignition rotation.`, 'Ready whenever you need a boost!');
+    }
+
+    let currentEnergyActivity = '';
+    function triggerEnergyBoost() {
+      const pool = state.energyActivities;
+      currentEnergyActivity = pool[Math.floor(Math.random() * pool.length)];
+
+      showModal(
+        'ENERGY IGNITION PROTOCOL',
+        '⚡',
+        currentEnergyActivity,
+        'Execute this right now to wake up your nervous system and build unstoppable momentum!',
+        'Complete for +15 Credits & Egg Hatch Progress!',
+        `<button onclick="completeEnergyBoost()" class="btn-cyber px-5 py-2.5 rounded-xl bg-emerald-500 text-black font-display font-bold text-sm hover:bg-emerald-400">✓ DONE (+15 🪙)</button>
+         <button onclick="closeModal()" class="btn-cyber px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-display font-bold text-sm">CLOSE</button>`
+      );
+    }
+
+    function completeEnergyBoost() {
+      state.credits += 15;
+      if (state.incubatingEgg) {
+        state.incubatingEgg.progress += 1;
+        const eggInfo = EGGS_CATALOG.find(e => e.id === state.incubatingEgg.eggId);
+        if (state.incubatingEgg.progress >= eggInfo.hatchesNeeded) {
+          if (!state.unlockedPets.includes(eggInfo.petId)) state.unlockedPets.push(eggInfo.petId);
+          state.equippedPet = eggInfo.petId;
+          state.incubatingEgg = null;
+        }
+      }
+      saveState();
+      renderShop();
+      closeModal();
+    }
+
+    function triggerMotivation() {
+      const quote = MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)];
+      showModal(
+        'SYSTEM OVERRIDE // DISCIPLINE',
+        '🔥',
+        'ARISE, MASTER LIAM',
+        `"${quote}"`,
+        'Unlimited Motivation Protocol • Zero Excuses',
+        `<button onclick="triggerMotivation()" class="btn-cyber px-5 py-2.5 rounded-xl bg-purple-600 text-white font-display font-bold text-sm hover:bg-purple-500">↻ ANOTHER BOOST</button>
+         <button onclick="closeModal()" class="btn-cyber px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-display font-bold text-sm">LOCK IN</button>`
+      );
+    }
+
+    function openPrayModal() {
+      const dayIdx = new Date().getDate();
+      const prayer = DAILY_PRAYERS[dayIdx % DAILY_PRAYERS.length];
+      showModal(
+        'DAILY SANCTUARY // PRAYER',
+        '🙏',
+        'A Moment With God',
+        prayer,
+        'Resets daily • Peace, gratitude & inner strength',
+        `<button onclick="closeModal()" class="btn-cyber px-6 py-2.5 rounded-xl bg-amber-400 text-black font-display font-bold text-sm hover:bg-amber-300">AMEN ✨</button>`
+      );
+    }
+
+    // -----------------------------------------------------------
+    // 8. EGG SHOP & PET SANCTUARY (10 EGGS)
+    // -----------------------------------------------------------
+    function renderShop() {
+      document.getElementById('unlocked-pets-count').textContent = state.unlockedPets.length;
+
+      // Unlocked Pets Grid
+      const petsGrid = document.getElementById('unlocked-pets-grid');
+      petsGrid.innerHTML = EGGS_CATALOG.map(item => {
+        const unlocked = state.unlockedPets.includes(item.petId);
+        const equipped = state.equippedPet === item.petId;
+        if (!unlocked) {
+          return `
+            <div class="p-3 rounded-2xl bg-black/40 border border-slate-800/80 text-center opacity-50">
+              <div class="text-3xl grayscale">❓</div>
+              <div class="text-[10px] font-mono text-slate-500 mt-1">${item.rarity}</div>
+              <div class="text-xs font-bold text-slate-500">LOCKED</div>
+            </div>
+          `;
+        }
+        return `
+          <div onclick="equipPet('${item.petId}')" class="cursor-pointer p-3 rounded-2xl border text-center transition ${equipped ? 'bg-purple-950/50 border-cyan-400 shadow-[0_0_18px_rgba(0,243,255,0.25)]' : 'bg-black/60 border-purple-500/30 hover:border-purple-400'}">
+            <div class="text-4xl pet-idle">${item.petEmoji}</div>
+            <div class="text-[10px] font-mono ${item.color} mt-1">${item.rarity}</div>
+            <div class="text-xs font-display font-bold text-white truncate">${item.petName}</div>
+            <div class="mt-1.5 text-[10px] font-mono px-2 py-0.5 rounded ${equipped ? 'bg-cyan-400 text-black font-bold' : 'bg-slate-800 text-slate-300'}">
+              ${equipped ? 'EQUIPPED' : 'TAP TO EQUIP'}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 10 Eggs Shop Grid
+      const eggsGrid = document.getElementById('eggs-shop-grid');
+      eggsGrid.innerHTML = EGGS_CATALOG.map(egg => {
+        const alreadyOwned = state.unlockedPets.includes(egg.petId);
+        const isIncubating = state.incubatingEgg && state.incubatingEgg.eggId === egg.id;
+        return `
+          <div class="p-4 rounded-2xl bg-black/65 border border-cyan-500/25 flex flex-col justify-between text-center hover:border-cyan-400 transition">
+            <div>
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-900 ${egg.color} border border-slate-700">${egg.rarity}</span>
+              <div class="text-5xl my-3 egg-wobble">${egg.eggEmoji}</div>
+              <h4 class="font-display font-bold text-sm text-white">${egg.name}</h4>
+              <div class="text-[11px] text-slate-400 mt-1">Hatches in <strong class="text-cyan-300">${egg.hatchesNeeded} tasks</strong></div>
+              <div class="text-[11px] text-purple-300 mt-0.5">Contains: ${alreadyOwned ? egg.petName : '??? Mystery Pet'}</div>
+            </div>
+            <button onclick="buyEgg('${egg.id}')" class="mt-3 w-full btn-cyber py-2 rounded-xl font-display font-bold text-xs ${isIncubating ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400' : 'bg-amber-400 text-black hover:bg-amber-300'}">
+              ${isIncubating ? 'INCUBATING...' : `BUY • ${egg.price} 🪙`}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function buyEgg(eggId) {
+      const egg = EGGS_CATALOG.find(e => e.id === eggId);
+      if (!egg) return;
+      if (state.incubatingEgg) {
+        showModal('INCUBATOR BUSY', '⚠️', 'Chamber Occupied', 'Finish hatching your current egg first (or use Instant Hatch)!', '');
+        return;
+      }
+      if (state.credits < egg.price) {
+        showModal('INSUFFICIENT CREDITS', '🪙', 'Need More Credits!', `You need ${egg.price} Credits for the ${egg.name}. Complete tasks or win Arcade matches!`, `Current Balance: ${state.credits} 🪙`);
+        return;
+      }
+
+      state.credits -= egg.price;
+      state.incubatingEgg = { eggId: egg.id, progress: 0 };
+      saveState();
+      renderShop();
+      showModal('EGG ACQUIRED!', egg.eggEmoji, `${egg.name} Incubating!`, `Complete ${egg.hatchesNeeded} habits, quests, or energy boosters to hatch your new companion!`, `-${egg.price} Credits`);
+    }
+
+    function instantHatchDebug() {
+      if (!state.incubatingEgg) return;
+      if (state.credits < 50) {
+        showModal('NEED 50 CREDITS', '🪙', 'Not Enough Credits', 'Instant Hatch costs 50 Credits.', '');
+        return;
+      }
+      state.credits -= 50;
+      const eggInfo = EGGS_CATALOG.find(e => e.id === state.incubatingEgg.eggId);
+      if (!state.unlockedPets.includes(eggInfo.petId)) state.unlockedPets.push(eggInfo.petId);
+      state.equippedPet = eggInfo.petId;
+      state.incubatingEgg = null;
+      saveState();
+      renderShop();
+      showModal('INSTANT HATCH!', eggInfo.petEmoji, `${eggInfo.petName} Awakened!`, `Your new ${eggInfo.rarity} companion is now equipped on your Main HUD!`, '-50 Credits');
+    }
+
+    function equipPet(petId) {
+      state.equippedPet = petId;
+      saveState();
+      renderShop();
+      petInteract();
+    }
+
+    // -----------------------------------------------------------
+    // 9. ARCADE ARENA: STREET FIGHTER, SNAKE, PONG, TIC-TAC-TOE
+    // -----------------------------------------------------------
+    function selectArcadeGame(gameKey) {
+      ['sf', 'snake', 'pong', 'ttt'].forEach(k => {
+        document.getElementById('arcade-' + k).classList.add('hidden');
+        const btn = document.getElementById('btn-game-' + k);
+        btn.className = 'btn-cyber px-3.5 py-2 rounded-xl font-display font-bold text-xs bg-slate-800 text-slate-300 border border-slate-700';
+      });
+      document.getElementById('arcade-' + gameKey).classList.remove('hidden');
+      const activeBtn = document.getElementById('btn-game-' + gameKey);
+      activeBtn.className = 'btn-cyber px-3.5 py-2 rounded-xl font-display font-bold text-xs bg-cyan-500 text-black shadow-[0_0_15px_rgba(0,243,255,0.4)]';
+
+      if (gameKey === 'sf') startStreetFighter();
+      if (gameKey === 'snake') startSnake();
+      if (gameKey === 'pong') startPong();
+      if (gameKey === 'ttt') resetTTT();
+    }
+
+    // --- 9A. STREET FIGHTER (CYBER BRAWL) ---
+    let sfState = null;
+    let sfAnimId = null;
+
+    function startStreetFighter() {
+      const canvas = document.getElementById('sf-canvas');
+      canvas.width = canvas.clientWidth || 700;
+      canvas.height = canvas.clientHeight || 280;
+      document.getElementById('sf-banner').classList.add('hidden');
+
+      sfState = {
+        over: false,
+        p1: { x: 110, hp: 100, action: 'idle', timer: 0, blocking: false },
+        ai: { x: canvas.width - 150, hp: 100, action: 'idle', timer: 0, cooldown: 35 },
+        fireballs: [],
+        particles: []
+      };
+      updateSFBars();
+      if (sfAnimId) cancelAnimationFrame(sfAnimId);
+      loopStreetFighter();
+    }
+
+    function updateSFBars() {
+      if (!sfState) return;
+      const p1 = Math.max(0, sfState.p1.hp);
+      const ai = Math.max(0, sfState.ai.hp);
+      document.getElementById('sf-p1-hp').style.width = p1 + '%';
+      document.getElementById('sf-p1-hp-text').textContent = p1 + '%';
+      document.getElementById('sf-ai-hp').style.width = ai + '%';
+      document.getElementById('sf-ai-hp-text').textContent = ai + '%';
+    }
+
+    function sfMove(dir) {
+      if (!sfState || sfState.over) return;
+      const canvas = document.getElementById('sf-canvas');
+      sfState.p1.x = Math.max(40, Math.min(canvas.width - 80, sfState.p1.x + dir * 34));
+    }
+
+    function sfAction(type) {
+      if (!sfState || sfState.over) return;
+      const p1 = sfState.p1;
+      const ai = sfState.ai;
+      p1.action = type;
+      p1.timer = 16;
+      p1.blocking = (type === 'block');
+
+      const dist = Math.abs(p1.x - ai.x);
+
+      if (type === 'punch' && dist < 95) {
+        ai.hp -= 10;
+        spawnSFHit(ai.x, 150, '#00f3ff');
+      } else if (type === 'kick' && dist < 115) {
+        ai.hp -= 14;
+        spawnSFHit(ai.x, 165, '#b026ff');
+      } else if (type === 'hadouken') {
+        sfState.fireballs.push({ x: p1.x + 35, y: 155, vx: 9, owner: 'p1', color: '#00f3ff' });
+      }
+      checkSFEnd();
+    }
+
+    function spawnSFHit(x, y, color) {
+      for (let i = 0; i < 10; i++) {
+        sfState.particles.push({
+          x, y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
+          life: 18,
+          color
+        });
+      }
+    }
+
+    function checkSFEnd() {
+      updateSFBars();
+      if (sfState.ai.hp <= 0 && !sfState.over) {
+        sfState.over = true;
+        state.credits += 35;
+        saveState();
+        document.getElementById('sf-banner-title').textContent = 'K.O.! MASTER LIAM WINS!';
+        document.getElementById('sf-banner-title').className = 'font-display font-black text-2xl sm:text-4xl text-amber-300 glow-text-gold';
+        document.getElementById('sf-banner-sub').textContent = '+35 Credits Awarded to Your Account!';
+        document.getElementById('sf-banner').classList.remove('hidden');
+      } else if (sfState.p1.hp <= 0 && !sfState.over) {
+        sfState.over = true;
+        document.getElementById('sf-banner-title').textContent = 'DEFEATED BY SHADOW BOT';
+        document.getElementById('sf-banner-title').className = 'font-display font-black text-2xl sm:text-4xl text-rose-400';
+        document.getElementById('sf-banner-sub').textContent = 'Train your combos and strike back!';
+        document.getElementById('sf-banner').classList.remove('hidden');
+      }
+    }
+
+    function loopStreetFighter() {
+      const canvas = document.getElementById('sf-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+      const groundY = H - 45;
+
+      // Arena Background
+      ctx.fillStyle = '#070812';
+      ctx.fillRect(0, 0, W, H);
+
+      // Neon Dojo Grid Floor
+      ctx.strokeStyle = 'rgba(0, 243, 255, 0.25)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, groundY);
+      ctx.lineTo(W, groundY);
+      ctx.stroke();
+
+      // Background Pillars
+      ctx.fillStyle = 'rgba(176, 38, 255, 0.08)';
+      ctx.fillRect(W * 0.2, 30, 40, groundY - 30);
+      ctx.fillRect(W * 0.75, 30, 40, groundY - 30);
+
+      if (!sfState.over) {
+        // Timers
+        if (sfState.p1.timer > 0) sfState.p1.timer--;
+        else { sfState.p1.action = 'idle'; sfState.p1.blocking = false; }
+
+        if (sfState.ai.timer > 0) sfState.ai.timer--;
+        else sfState.ai.action = 'idle';
+
+        // AI Logic
+        sfState.ai.cooldown--;
+        const dist = Math.abs(sfState.p1.x - sfState.ai.x);
+        if (dist > 105) {
+          sfState.ai.x += sfState.p1.x < sfState.ai.x ? -2.2 : 2.2;
+        }
+        if (sfState.ai.cooldown <= 0) {
+          sfState.ai.cooldown = 42 + Math.floor(Math.random() * 25);
+          if (dist < 110) {
+            sfState.ai.action = 'punch';
+            sfState.ai.timer = 15;
+            const dmg = sfState.p1.blocking ? 2 : 9;
+            sfState.p1.hp -= dmg;
+            spawnSFHit(sfState.p1.x, groundY - 65, '#ff2a5f');
+            checkSFEnd();
+          } else {
+            sfState.ai.action = 'hadouken';
+            sfState.ai.timer = 15;
+            sfState.fireballs.push({ x: sfState.ai.x - 25, y: groundY - 65, vx: -7.5, owner: 'ai', color: '#ff2a5f' });
+          }
+        }
+      }
+
+      // Draw Fighter Helper
+      function drawFighter(f, isP1) {
+        const mainColor = isP1 ? '#00f3ff' : '#ff2a5f';
+        ctx.save();
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = mainColor;
+
+        // Body
+        ctx.fillStyle = mainColor;
+        ctx.fillRect(f.x - 16, groundY - 85, 32, 55);
+
+        // Head
+        ctx.beginPath();
+        ctx.arc(f.x, groundY - 100, 14, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Legs
+        ctx.fillStyle = '#e2e8f0';
+        ctx.fillRect(f.x - 14, groundY - 30, 10, 30);
+        ctx.fillRect(f.x + 4, groundY - 30, 10, 30);
+
+        // Attack limb visual
+        if (f.action === 'punch') {
+          ctx.fillStyle = '#ffd700';
+          ctx.fillRect(isP1 ? f.x + 16 : f.x - 46, groundY - 75, 30, 12);
+        } else if (f.action === 'kick') {
+          ctx.fillStyle = '#b026ff';
+          ctx.fillRect(isP1 ? f.x + 14 : f.x - 52, groundY - 45, 38, 14);
+        } else if (f.blocking) {
+          ctx.strokeStyle = '#34d399';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(f.x - 24, groundY - 115, 48, 115);
+        }
+        ctx.restore();
+      }
+
+      drawFighter(sfState.p1, true);
+      drawFighter(sfState.ai, false);
+
+      // Update & Draw Fireballs
+      sfState.fireballs = sfState.fireballs.filter(fb => {
+        fb.x += fb.vx;
+        ctx.save();
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = fb.color;
+        ctx.fillStyle = fb.color;
+        ctx.beginPath();
+        ctx.arc(fb.x, fb.y, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        if (!sfState.over) {
+          if (fb.owner === 'p1' && Math.abs(fb.x - sfState.ai.x) < 25) {
+            sfState.ai.hp -= 16;
+            spawnSFHit(sfState.ai.x, fb.y, '#00f3ff');
+            checkSFEnd();
+            return false;
+          }
+          if (fb.owner === 'ai' && Math.abs(fb.x - sfState.p1.x) < 25) {
+            sfState.p1.hp -= sfState.p1.blocking ? 3 : 12;
+            spawnSFHit(sfState.p1.x, fb.y, '#ff2a5f');
+            checkSFEnd();
+            return false;
+          }
+        }
+        return fb.x > 0 && fb.x < W;
+      });
+
+      // Particles
+      sfState.particles = sfState.particles.filter(pt => {
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.life--;
+        ctx.fillStyle = pt.color;
+        ctx.fillRect(pt.x, pt.y, 4, 4);
+        return pt.life > 0;
+      });
+
+      sfAnimId = requestAnimationFrame(loopStreetFighter);
+    }
+
+    // Keyboard support for Street Fighter
+    window.addEventListener('keydown', e => {
+      if (document.getElementById('arcade-sf').classList.contains('hidden')) return;
+      if (e.key === 'a' || e.key === 'ArrowLeft') sfMove(-1);
+      if (e.key === 'd' || e.key === 'ArrowRight') sfMove(1);
+      if (e.key === 'j') sfAction('punch');
+      if (e.key === 'k') sfAction('kick');
+      if (e.key === 'l') sfAction('hadouken');
+      if (e.key === 's') sfAction('block');
+    });
+
+    // --- 9B. NEON SNAKE ---
+    let snakeInterval = null;
+    let snakeData = null;
+
+    function startSnake() {
+      const canvas = document.getElementById('snake-canvas');
+      const size = canvas.clientWidth || 320;
+      canvas.width = size;
+      canvas.height = size;
+
+      snakeData = {
+        grid: 16,
+        body: [{ x: 8, y: 8 }, { x: 7, y: 8 }],
+        dir: { x: 1, y: 0 },
+        food: { x: 12, y: 8 },
+        score: 0,
+        rewarded: false
+      };
+      document.getElementById('snake-score').textContent = '0';
+      if (snakeInterval) clearInterval(snakeInterval);
+      snakeInterval = setInterval(tickSnake, 140);
+    }
+
+    function setSnakeDir(dx, dy) {
+      if (!snakeData) return;
+      if (snakeData.dir.x === -dx && snakeData.dir.y === -dy) return;
+      snakeData.dir = { x: dx, y: dy };
+    }
+
+    function tickSnake() {
+      const canvas = document.getElementById('snake-canvas');
+      const ctx = canvas.getContext('2d');
+      const cell = canvas.width / snakeData.grid;
+
+      const head = {
+        x: (snakeData.body[0].x + snakeData.dir.x + snakeData.grid) % snakeData.grid,
+        y: (snakeData.body[0].y + snakeData.dir.y + snakeData.grid) % snakeData.grid
+      };
+
+      // Self collision
+      if (snakeData.body.some(seg => seg.x === head.x && seg.y === head.y)) {
+        clearInterval(snakeInterval);
+        ctx.fillStyle = 'rgba(0,0,0,0.75)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ff2a5f';
+        ctx.font = 'bold 20px Orbitron';
+        ctx.textAlign = 'center';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
+        return;
+      }
+
+      snakeData.body.unshift(head);
+
+      if (head.x === snakeData.food.x && head.y === snakeData.food.y) {
+        snakeData.score += 1;
+        document.getElementById('snake-score').textContent = snakeData.score;
+        snakeData.food = {
+          x: Math.floor(Math.random() * snakeData.grid),
+          y: Math.floor(Math.random() * snakeData.grid)
+        };
+        if (snakeData.score >= 8 && !snakeData.rewarded) {
+          snakeData.rewarded = true;
+          state.credits += 25;
+          saveState();
+          showModal('SNAKE MILESTONE!', '🐍', '+25 Credits Earned!', 'You reached 8+ points in Neon Snake, Master Liam!', 'Keep going for a higher record!');
+        }
+      } else {
+        snakeData.body.pop();
+      }
+
+      // Draw
+      ctx.fillStyle = '#05060b';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Food
+      ctx.fillStyle = '#ffd700';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#ffd700';
+      ctx.fillRect(snakeData.food.x * cell + 2, snakeData.food.y * cell + 2, cell - 4, cell - 4);
+
+      // Snake
+      snakeData.body.forEach((seg, i) => {
+        ctx.fillStyle = i === 0 ? '#00f3ff' : '#10b981';
+        ctx.shadowColor = '#00f3ff';
+        ctx.fillRect(seg.x * cell + 1, seg.y * cell + 1, cell - 2, cell - 2);
+      });
+      ctx.shadowBlur = 0;
+    }
+
+    // --- 9C. CYBER PONG ---
+    let pongAnim = null;
+    let pong = null;
+
+    function startPong() {
+      const canvas = document.getElementById('pong-canvas');
+      canvas.width = canvas.clientWidth || 600;
+      canvas.height = canvas.clientHeight || 270;
+
+      pong = {
+        pY: canvas.height / 2 - 35,
+        aiY: canvas.height / 2 - 35,
+        pH: 70,
+        bx: canvas.width / 2,
+        by: canvas.height / 2,
+        vx: 4.5,
+        vy: 3.2,
+        pScore: 0,
+        aiScore: 0,
+        over: false
+      };
+
+      canvas.onpointermove = e => {
+        const rect = canvas.getBoundingClientRect();
+        pong.pY = Math.max(0, Math.min(canvas.height - pong.pH, e.clientY - rect.top - pong.pH / 2));
+      };
+
+      if (pongAnim) cancelAnimationFrame(pongAnim);
+      loopPong();
+    }
+
+    function movePongPaddle(dy) {
+      if (!pong) return;
+      const canvas = document.getElementById('pong-canvas');
+      pong.pY = Math.max(0, Math.min(canvas.height - pong.pH, pong.pY + dy));
+    }
+
+    function loopPong() {
+      const canvas = document.getElementById('pong-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+
+      ctx.fillStyle = '#05060c';
+      ctx.fillRect(0, 0, W, H);
+
+      // Center dashed line
+      ctx.strokeStyle = 'rgba(0, 243, 255, 0.25)';
+      ctx.setLineDash([8, 8]);
+      ctx.beginPath();
+      ctx.moveTo(W / 2, 0);
+      ctx.lineTo(W / 2, H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Scores
+      ctx.fillStyle = '#00f3ff';
+      ctx.font = 'bold 26px Orbitron';
+      ctx.fillText(pong.pScore, W * 0.25, 40);
+      ctx.fillStyle = '#b026ff';
+      ctx.fillText(pong.aiScore, W * 0.72, 40);
+
+      if (!pong.over) {
+        pong.bx += pong.vx;
+        pong.by += pong.vy;
+
+        if (pong.by < 8 || pong.by > H - 8) pong.vy *= -1;
+
+        // AI tracking
+        const aiCenter = pong.aiY + pong.pH / 2;
+        if (aiCenter < pong.by - 10) pong.aiY += 3.3;
+        else if (aiCenter > pong.by + 10) pong.aiY -= 3.3;
+
+        // Player Paddle hit
+        if (pong.bx < 24 && pong.by > pong.pY && pong.by < pong.pY + pong.pH) {
+          pong.vx = Math.abs(pong.vx) * 1.04;
+        }
+        // AI Paddle hit
+        if (pong.bx > W - 24 && pong.by > pong.aiY && pong.by < pong.aiY + pong.pH) {
+          pong.vx = -Math.abs(pong.vx) * 1.04;
+        }
+
+        // Scoring
+        if (pong.bx < 0) {
+          pong.aiScore++;
+          pong.bx = W / 2; pong.by = H / 2; pong.vx = 4.5;
+        } else if (pong.bx > W) {
+          pong.pScore++;
+          pong.bx = W / 2; pong.by = H / 2; pong.vx = -4.5;
+        }
+
+        if (pong.pScore >= 5) {
+          pong.over = true;
+          state.credits += 30;
+          saveState();
+          showModal('CYBER PONG VICTORY!', '🏓', '+30 Credits Earned!', 'Master Liam defeated the AI in Cyber Pong!', 'Reflexes sharp as ever.');
+        } else if (pong.aiScore >= 5) {
+          pong.over = true;
+        }
+      }
+
+      // Draw Paddles & Ball
+      ctx.fillStyle = '#00f3ff';
+      ctx.fillRect(12, pong.pY, 10, pong.pH);
+      ctx.fillStyle = '#b026ff';
+      ctx.fillRect(W - 22, pong.aiY, 10, pong.pH);
+
+      ctx.fillStyle = '#ffd700';
+      ctx.beginPath();
+      ctx.arc(pong.bx, pong.by, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      pongAnim = requestAnimationFrame(loopPong);
+    }
+
+    // --- 9D. TACTICAL TIC-TAC-TOE ---
+    let tttBoard = Array(9).fill('');
+    let tttOver = false;
+
+    function resetTTT() {
+      tttBoard = Array(9).fill('');
+      tttOver = false;
+      document.getElementById('ttt-status').textContent = 'Your Turn (X)';
+      renderTTT();
+    }
+
+    function renderTTT() {
+      const grid = document.getElementById('ttt-grid');
+      grid.innerHTML = tttBoard.map((cell, i) => `
+        <button onclick="playTTT(${i})" class="h-24 rounded-2xl bg-black/70 border border-purple-500/40 font-display font-black text-3xl flex items-center justify-center hover:border-cyan-400 transition ${cell === 'X' ? 'text-cyan-400 glow-text-cyan' : 'text-rose-400'}">
+          ${cell}
+        </button>
+      `).join('');
+    }
+
+    function checkTTTWinner(b) {
+      const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      for (const [a, c, d] of lines) {
+        if (b[a] && b[a] === b[c] && b[a] === b[d]) return b[a];
+      }
+      return b.includes('') ? null : 'DRAW';
+    }
+
+    function playTTT(idx) {
+      if (tttOver || tttBoard[idx]) return;
+      tttBoard[idx] = 'X';
+      renderTTT();
+
+      let res = checkTTTWinner(tttBoard);
+      if (res) return endTTT(res);
+
+      // AI Move
+      const empty = tttBoard.map((v, i) => v === '' ? i : null).filter(v => v !== null);
+      const aiPick = empty[Math.floor(Math.random() * empty.length)];
+      tttBoard[aiPick] = 'O';
+      renderTTT();
+
+      res = checkTTTWinner(tttBoard);
+      if (res) endTTT(res);
+    }
+
+    function endTTT(res) {
+      tttOver = true;
+      if (res === 'X') {
+        document.getElementById('ttt-status').textContent = 'VICTORY! +20 CREDITS!';
+        state.credits += 20;
+        saveState();
+        showModal('TACTICAL VICTORY!', '❌', '+20 Credits Awarded!', 'You outsmarted JARVIS on the grid, Master Liam!', '');
+      } else if (res === 'O') {
+        document.getElementById('ttt-status').textContent = 'JARVIS WINS! REMATCH?';
+      } else {
+        document.getElementById('ttt-status').textContent = 'TACTICAL DRAW!';
+      }
+    }
+
+    // -----------------------------------------------------------
+    // 10. JARVIS AI CHATBOT & LOZZINIHO YOUTUBE STUDIO AI
+    // -----------------------------------------------------------
+    function renderJarvisChat() {
+      const box = document.getElementById('jarvis-chat-box');
+      box.innerHTML = state.jarvisChat.map(msg => {
+        const isUser = msg.sender === 'user';
+        return `
+          <div class="flex ${isUser ? 'justify-end' : 'justify-start'}">
+            <div class="max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${isUser ? 'bg-cyan-500/20 border border-cyan-400/50 text-white' : 'bg-slate-900/90 border border-purple-500/35 text-slate-200'}">
+              <div class="text-[10px] font-mono mb-0.5 ${isUser ? 'text-cyan-300 text-right' : 'text-purple-400'}">
+                ${isUser ? 'MASTER LIAM' : 'JARVIS // BEST FRIEND'}
+              </div>
+              <div>${msg.text}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function quickJarvisPrompt(text) {
+      document.getElementById('jarvis-input').value = text;
+      sendJarvisMessage(new Event('submit'));
+    }
+
+    function sendJarvisMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('jarvis-input');
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      state.jarvisChat.push({ sender: 'user', text: userText });
+      input.value = '';
+
+      const reply = generateJarvisReply(userText);
+      state.jarvisChat.push({ sender: 'jarvis', text: reply });
+      saveState();
+      renderJarvisChat();
+    }
+
+    function generateJarvisReply(msg) {
+      const low = msg.toLowerCase();
+      if (low.includes('kyla')) {
+        return "I hear you, Master Liam. Kyla was someone you admired deeply—the one you could never have—and it's okay to acknowledge that feeling. But remember: real growth happens when you take all that energy and pour it into becoming the sharpest, most disciplined version of yourself. Your story is just getting started.";
+      }
+      if (low.includes('anessa') || low.includes('ex') || low.includes('heartbreak')) {
+        return "You survived the heartbreak with Anessa, Master Liam, and look at you now—building your own System, leveling up your body, your studies, and your YouTube channel. That chapter closed so a much stronger chapter could open. I've always got your back.";
+      }
+      if (low.includes('youtube') || low.includes('video') || low.includes('channel')) {
+        return "Your YouTube channel has massive potential, Master Liam! Switch over to Lozziniho right next to me to generate 10 fresh titles, pin your favorite to the Main HUD, and let's get filming.";
+      }
+      if (low.includes('football') || low.includes('exam') || low.includes('tired') || low.includes('quit')) {
+        return "Never quit on yourself, Master Liam. Whether it's dominating on the football pitch or crushing your exams, take one deep breath, hit the Energy Ignition button for 10 push-ups, and win just the next 15 minutes.";
+      }
+      const general = [
+        "Always here for you, Master Liam. Tell me what's on your mind—we can strategize your next goal, talk about life, or hit the Arcade for some Street Fighter.",
+        "You've already got " + state.credits + " Credits stacked up, Master Liam. Stay locked in on today's habits—your future self is counting on the moves you make right now.",
+        "I'm listening, bro. Remember, no matter what happened in the past with Anessa or Kyla, you're the main character of this System. What's our next move?"
+      ];
+      return general[Math.floor(Math.random() * general.length)];
+    }
+
+    function clearJarvisChat() {
+      state.jarvisChat = [
+        { sender: 'jarvis', text: 'Memory buffer refreshed, Master Liam. Ready whenever you want to talk!' }
+      ];
+      saveState();
+      renderJarvisChat();
+    }
+
+    // LOZZINIHO YOUTUBE IDEA GENERATOR (10 IDEAS)
+    const YT_IDEA_TEMPLATES = {
+      brawlstars: [
+        "I Tried Reaching Masters in Brawl Stars Using ONLY Random Brawlers!",
+        "100 Hours of Brawl Stars Ranked Taught Me THIS...",
+        "Can I Beat Pro Players With the WORST Brawler in the Game?",
+        "Unlocking 50 Starr Drops in One Sitting — Insane Luck?!",
+        "Street Fighter vs Brawl Stars: Testing My Reflexes for 24 Hours!",
+        "How I Went From Beginner to Carrying Every Ranked Match",
+        "Testing Secret Brawl Stars Tricks That Actually Work",
+        "1 Loss = 20 Push-Ups Challenge in Brawl Stars!",
+        "Building the Ultimate Undefeated Trio in Brawl Stars",
+        "Why Everyone Is Playing This Broken Brawler Right Now"
+      ],
+      football: [
+        "Training Like a Pro Footballer for 7 Days Straight (Before & After)",
+        "5 Unstoppable Football Skill Moves That Embarrass Defenders",
+        "Building a 100 OVR Dream Squad in FC Mobile Without Spending Money!",
+        "1000 Shots Challenge: Testing My Accuracy Until Exhaustion",
+        "FC Mobile Pack Opening That Broke My Luck!",
+        "How I Improved My Football Stamina & Speed in 14 Days",
+        "Recreating Iconic Champions League Goals in Real Life!",
+        "Matchday Vlog: Behind the Scenes of My Biggest Football Game",
+        "3 Mindset Secrets Every Young Footballer Needs Before a Match",
+        "Testing Viral Football Boots & Ball Curve Tricks"
+      ],
+      irl: [
+        "I Turned My Real Life Into a Solo Leveling RPG System for 30 Days",
+        "Day in the Life of a Student Athlete & Creator (5:00 AM Routine)",
+        "How Discipline Saved Me After Heartbreak — My Honest Story",
+        "My Aesthetic Midnight Desk & Gaming Setup Tour (Neon Edition)",
+        "100 Push-Ups a Day for 30 Days — What Actually Happened to My Body",
+        "How I Balance Exams, Football Training, and YouTube",
+        "Late Night Neon City Walk & Mindset Talk (Real & Unfiltered)",
+        "7 Habits That Instantly Upgraded My Confidence",
+        "Studying for 4 Hours Straight Using the System Protocol",
+        "Things Nobody Tells You About Starting a YouTube Channel Young"
+      ]
+    };
+
+    function generateLozzinihoIdeas() {
+      const niche = document.getElementById('yt-niche-select').value;
+      let pool = [];
+      if (niche === 'all') {
+        pool = [...YT_IDEA_TEMPLATES.brawlstars, ...YT_IDEA_TEMPLATES.football, ...YT_IDEA_TEMPLATES.irl];
+      } else {
+        pool = [...YT_IDEA_TEMPLATES[niche]];
+      }
+      const picked = pool.sort(() => 0.5 - Math.random()).slice(0, 10);
+      state.ytIdeas = picked;
+      saveState();
+      renderLozzinihoIdeas();
+    }
+
+    function renderLozzinihoIdeas() {
+      const list = document.getElementById('lozziniho-ideas-list');
+      if (!state.ytIdeas || state.ytIdeas.length === 0) {
+        generateLozzinihoIdeas();
+        return;
+      }
+      list.innerHTML = state.ytIdeas.map((title, idx) => `
+        <div class="p-3 rounded-xl bg-black/60 border border-purple-500/30 flex items-center justify-between gap-3 hover:border-rose-400 transition">
+          <div class="min-w-0">
+            <span class="text-[10px] font-mono text-rose-400">IDEA #${idx + 1}</span>
+            <div class="text-xs sm:text-sm font-bold text-white leading-snug">${title}</div>
+          </div>
+          <button onclick="chooseYoutubeIdea(${idx})" class="shrink-0 btn-cyber px-3 py-1.5 rounded-lg bg-rose-500/25 border border-rose-400 text-rose-200 font-display font-bold text-[11px] hover:bg-rose-500 hover:text-white">
+            CHOOSE (+15 🪙)
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function chooseYoutubeIdea(idx) {
+      const chosen = state.ytIdeas[idx];
+      if (!chosen) return;
+      state.pinnedYoutube = chosen;
+      state.credits += 15;
+      saveState();
+      showModal(
+        'YOUTUBE IDEA PINNED!',
+        '🎬',
+        'Pinned to Main HUD!',
+        `"${chosen}" is now pinned to your Command Center to remind you to create it!`,
+        '+15 Credits Awarded by Lozziniho!'
+      );
+    }
+
+    function completePinnedYoutube() {
+      const title = state.pinnedYoutube;
+      state.pinnedYoutube = '';
+      saveState();
+      awardTaskCompletion(50, `YouTube Video: ${title}`);
+    }
+
+    // -----------------------------------------------------------
+    // 11. INTERACTIVE NEON NIGHT CITY VISUALIZER (CANVAS)
+    // -----------------------------------------------------------
+    let cityConfig = {
+      scene: 'neotokyo',
+      weather: 'rain',
+      time: 'midnight'
+    };
+    let cityBuildings = [];
+    let cityPeople = [];
+    let cityParticles = [];
+    let cityDrones = [];
+
+    function initNightCity() {
+      const canvas = document.getElementById('city-canvas');
+      canvas.width = canvas.clientWidth || 900;
+      canvas.height = canvas.clientHeight || 420;
+
+      // Generate Buildings
+      cityBuildings = [];
+      let x = 0;
+      while (x < canvas.width + 60) {
+        const w = 45 + Math.floor(Math.random() * 55);
+        const h = 110 + Math.floor(Math.random() * 210);
+        const windows = [];
+        for (let wy = 18; wy < h - 20; wy += 18) {
+          for (let wx = 8; wx < w - 12; wx += 14) {
+            if (Math.random() > 0.35) {
+              windows.push({ wx, wy, lit: Math.random() > 0.25 });
+            }
+          }
+        }
+        cityBuildings.push({
+          x, w, h,
+          neonColor: ['#00f3ff', '#b026ff', '#ff2a5f', '#ffd700'][Math.floor(Math.random() * 4)],
+          hasSign: Math.random() > 0.45,
+          windows
+        });
+        x += w + 4;
+      }
+
+      // Generate Walking Pedestrians
+      cityPeople = [];
+      for (let i = 0; i < 16; i++) {
+        cityPeople.push({
+          x: Math.random() * canvas.width,
+          speed: (0.4 + Math.random() * 0.8) * (Math.random() > 0.5 ? 1 : -1),
+          color: ['#00f3ff', '#f472b6', '#a78bfa', '#fde047', '#38bdf8'][i % 5],
+          step: Math.random() * 10
+        });
+      }
+
+      // Weather particles
+      cityParticles = [];
+      for (let i = 0; i < 110; i++) {
+        cityParticles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          speed: 2 + Math.random() * 5,
+          len: 8 + Math.random() * 10
+        });
+      }
+
+      canvas.onclick = e => {
+        const rect = canvas.getBoundingClientRect();
+        cityDrones.push({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          vx: (Math.random() > 0.5 ? 1 : -1) * (1.8 + Math.random() * 1.5)
+        });
+      };
+    }
+
+    function updateCitySettings() {
+      cityConfig.scene = document.getElementById('city-scene-select').value;
+      cityConfig.weather = document.getElementById('city-weather-select').value;
+      cityConfig.time = document.getElementById('city-time-select').value;
+    }
+
+    function animateNightCity() {
+      const canvas = document.getElementById('city-canvas');
+      if (canvas && !document.getElementById('tab-city').classList.contains('hidden')) {
+        if (canvas.width !== canvas.clientWidth && canvas.clientWidth > 0) {
+          initNightCity();
+        }
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+        const streetY = H - 38;
+
+        // Sky Gradients by Time of Night
+        const skyPalettes = {
+          midnight: ['#03040a', '#090d24'],
+          dusk: ['#140826', '#2e1042'],
+          witching: ['#010103', '#050712'],
+          dawn: ['#0c122b', '#1e2952']
+        };
+        const [topCol, botCol] = skyPalettes[cityConfig.time] || skyPalettes.midnight;
+        const grad = ctx.createLinearGradient(0, 0, 0, streetY);
+        grad.addColorStop(0, topCol);
+        grad.addColorStop(1, botCol);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Scene Accent Colors
+        const sceneTint = {
+          neotokyo: '#00f3ff',
+          cyberseoul: '#b026ff',
+          shibuya: '#ffd700',
+          harbor: '#38bdf8'
+        }[cityConfig.scene];
+
+        // Glowing Moon / Cyber Orb
+        ctx.save();
+        ctx.shadowBlur = 35;
+        ctx.shadowColor = sceneTint;
+        ctx.fillStyle = sceneTint;
+        ctx.globalAlpha = 0.25;
+        ctx.beginPath();
+        ctx.arc(W * 0.78, 85, 36, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Draw Skyscrapers
+        cityBuildings.forEach(b => {
+          const by = streetY - b.h;
+          ctx.fillStyle = '#070913';
+          ctx.fillRect(b.x, by, b.w, b.h);
+          ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+          ctx.strokeRect(b.x, by, b.w, b.h);
+
+          // Windows
+          b.windows.forEach(win => {
+            if (!win.lit) return;
+            ctx.fillStyle = Math.random() > 0.995 ? '#ffffff' : 'rgba(0, 243, 255, 0.22)';
+            ctx.fillRect(b.x + win.wx, by + win.wy, 6, 9);
+          });
+
+          // Vertical Neon Signboard
+          if (b.hasSign) {
+            ctx.save();
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = b.neonColor;
+            ctx.fillStyle = b.neonColor;
+            ctx.fillRect(b.x + b.w - 10, by + 22, 4, Math.min(55, b.h * 0.4));
+            ctx.restore();
+          }
+        });
+
+        // Wet Street Reflection Surface
+        ctx.fillStyle = '#04050a';
+        ctx.fillRect(0, streetY, W, H - streetY);
+        ctx.strokeStyle = sceneTint;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, streetY);
+        ctx.lineTo(W, streetY);
+        ctx.stroke();
+
+        // Street Neon Reflections
+        cityBuildings.forEach(b => {
+          if (b.hasSign) {
+            ctx.fillStyle = b.neonColor;
+            ctx.globalAlpha = 0.14;
+            ctx.fillRect(b.x + b.w - 14, streetY + 3, 12, 28);
+            ctx.globalAlpha = 1;
+          }
+        });
+
+        // Walking Citizens on Sidewalk
+        cityPeople.forEach(p => {
+          p.x += p.speed;
+          p.step += 0.18;
+          if (p.x > W + 20) p.x = -20;
+          if (p.x < -20) p.x = W + 20;
+
+          const bob = Math.abs(Math.sin(p.step)) * 2.5;
+          const py = streetY - 18 - bob;
+
+          // Silhouette + Neon Umbrella / Jacket Trim
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(p.x - 3, py + 5, 6, 13);
+          ctx.beginPath();
+          ctx.arc(p.x, py + 2, 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Neon rim glow
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x - 3, py + 6, 6, 2);
+
+          if (cityConfig.weather === 'rain') {
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(p.x, py - 2, 8, Math.PI, 0);
+            ctx.stroke();
+          }
+        });
+
+        // Flying Neon Drones
+        cityDrones.forEach(d => {
+          d.x += d.vx;
+          if (d.x > W + 30) d.x = -30;
+          if (d.x < -30) d.x = W + 30;
+          ctx.fillStyle = '#00f3ff';
+          ctx.fillRect(d.x - 8, d.y - 2, 16, 4);
+          ctx.fillStyle = '#ff2a5f';
+          ctx.fillRect(d.x - 2, d.y + 2, 4, 2);
+        });
+
+        // Weather Layer (Rain, Snow, Mist)
+        if (cityConfig.weather === 'rain') {
+          ctx.strokeStyle = 'rgba(0, 243, 255, 0.35)';
+          ctx.lineWidth = 1;
+          cityParticles.forEach(pt => {
+            pt.y += pt.speed * 1.6;
+            pt.x -= 1;
+            if (pt.y > streetY) { pt.y = 0; pt.x = Math.random() * W; }
+            ctx.beginPath();
+            ctx.moveTo(pt.x, pt.y);
+            ctx.lineTo(pt.x - 2, pt.y + pt.len);
+            ctx.stroke();
+          });
+        } else if (cityConfig.weather === 'snow') {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+          cityParticles.forEach(pt => {
+            pt.y += pt.speed * 0.45;
+            pt.x += Math.sin(pt.y * 0.03);
+            if (pt.y > streetY) { pt.y = 0; pt.x = Math.random() * W; }
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        } else if (cityConfig.weather === 'mist') {
+          ctx.fillStyle = 'rgba(176, 38, 255, 0.12)';
+          ctx.fillRect(0, streetY - 65, W, 65);
+        }
+      }
+      requestAnimationFrame(animateNightCity);
+    }
+
+    // -----------------------------------------------------------
+    // 12. NAVIGATION & UNIVERSAL MODAL SYSTEM
+    // -----------------------------------------------------------
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + tabName).classList.add('active');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.className = 'nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-400 hover:text-white';
+      });
+      const activeNav = document.getElementById('nav-' + tabName);
+      activeNav.className = 'nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-cyan-300 bg-cyan-500/15 border border-cyan-400/40';
+
+      if (tabName === 'arcade') startStreetFighter();
+      if (tabName === 'city') initNightCity();
+    }
+
+    function showModal(badge, icon, title, body, extra, customButtonsHtml) {
+      document.getElementById('modal-badge').textContent = badge;
+      document.getElementById('modal-icon').textContent = icon;
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerText = body;
+      document.getElementById('modal-extra').textContent = extra || '';
+
+      if (customButtonsHtml) {
+        document.getElementById('modal-actions').innerHTML = customButtonsHtml;
+      } else {
+        document.getElementById('modal-actions').innerHTML = `
+          <button onclick="closeModal()" class="btn-cyber px-6 py-2.5 rounded-xl bg-cyan-500 text-black font-display font-bold text-sm hover:bg-cyan-400">
+            CLAIM & CONTINUE
+          </button>
+        `;
+      }
+      document.getElementById('system-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('system-modal').classList.add('hidden');
+    }
+
+    // -----------------------------------------------------------
+    // 13. INITIALIZE ENTIRE SYSTEM ON LOAD
+    // -----------------------------------------------------------
+    window.onload = function() {
+      checkDailyReset();
+      updateTopHUD();
+      renderHomeTasks();
+      renderDailyQuests();
+      renderRewardsPool();
+      renderCalendarHabits();
+      renderSpecialEvents();
+      renderShop();
+      renderJarvisChat();
+      renderLozzinihoIdeas();
+      initNightCity();
+      animateNightCity();
+    };
+  </script>
+</body>
+</html>
